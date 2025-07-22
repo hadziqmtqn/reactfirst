@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -12,17 +13,14 @@ function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Cek apakah user sudah login
         const token = localStorage.getItem('token');
         if (token) {
-            // Jika sudah login, redirect ke halaman utama
             navigate('/');
         }
     }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setError({});
         setLoading(true);
 
@@ -31,16 +29,18 @@ function Login() {
                 `${API_URL}/login`,
                 { email, password }
             );
-            // Handle success...
             localStorage.setItem('token', response.data.data.token);
-
-            navigate('/'); // Use useNavigate hook to redirect
+            navigate('/');
         } catch (err) {
-            // Error dari API (422)
             if (err.response && err.response.status === 422) {
                 setError(err.response.data.message || {});
             } else {
-                setError({ general: err.response.data.message || "Terjadi kesalahan, silakan coba lagi." });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Gagal',
+                    text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
+                });
+                setError({});
             }
         }
         setLoading(false);
@@ -86,7 +86,7 @@ function Login() {
                                 </div>
                             )}
                         </div>
-                        {error.general && <div className="alert alert-danger">{error.general}</div>}
+                        {/* error.general dihilangkan karena sekarang pakai Swal */}
                         <button type="submit" className="btn btn-primary w-100" disabled={loading}>
                             {loading ? "Loading..." : "Login"}
                         </button>
