@@ -142,7 +142,7 @@ function MainPage() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                fetchUsers(pagination.currentPage, search);
+                await fetchUsers(pagination.currentPage, search);
             } catch (err) {
                 setModalLoading(false);
                 if (err.response && err.response.status === 422) {
@@ -179,7 +179,7 @@ function MainPage() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                fetchUsers(pagination.currentPage, search);
+                await fetchUsers(pagination.currentPage, search);
             } catch (err) {
                 Swal.fire({
                     icon: 'error',
