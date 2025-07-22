@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -8,6 +9,16 @@ function Login() {
     const [loading, setLoading] = useState(false);
 
     const API_URL = process.env.REACT_APP_API_URL;
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Cek apakah user sudah login
+        const token = localStorage.getItem('token');
+        if (token) {
+            // Jika sudah login, redirect ke halaman utama
+            navigate('/');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,8 +32,9 @@ function Login() {
                 { email, password }
             );
             // Handle success...
-            console.log(response.data);
-            alert("Login sukses!");
+            localStorage.setItem('token', response.data.data.token);
+
+            navigate('/'); // Use useNavigate hook to redirect
         } catch (err) {
             // Error dari API (422)
             if (err.response && err.response.status === 422) {
