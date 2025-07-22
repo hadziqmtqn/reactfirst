@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function Navbar() {
     const token = localStorage.getItem('token');
@@ -8,23 +9,39 @@ function Navbar() {
     const API_URL = process.env.REACT_APP_API_URL;
 
     const handleLogout = async () => {
-        try {
-            // Kirim request logout ke endpoint
-            await axios.post(
-                `${API_URL}/logout`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-        } catch (err) {
-            // Tidak masalah jika error, tetap logout di client
+        const result = await Swal.fire({
+            title: 'Konfirmasi Logout',
+            text: 'Apakah Anda yakin ingin logout?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Logout',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#d33',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.post(
+                    `${API_URL}/logout`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            } catch (err) {
+                // Tidak masalah jika error, tetap logout di client
+            }
+            localStorage.removeItem("token");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Logout',
+                showConfirmButton: false,
+                timer: 1200
+            });
+            navigate("/login");
         }
-        // Hapus token dari localStorage
-        localStorage.removeItem("token");
-        navigate("/login");
     };
 
     return (
@@ -42,9 +59,13 @@ function Navbar() {
                     </ul>
                     <div className="d-flex">
                         {
-                            token ? (<button onClick={handleLogout} className="btn btn-outline-danger">
-                                Logout
-                            </button>) : (<Link to="/login" className="btn btn-outline-success">Login</Link>)
+                            token ? (
+                                <button onClick={handleLogout} className="btn btn-outline-danger">
+                                    Logout
+                                </button>
+                            ) : (
+                                <Link to="/login" className="btn btn-outline-success">Login</Link>
+                            )
                         }
                     </div>
                 </div>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./Template/Navbar";
-import MainPage from "./Dashboard/MainPage";
-import Login from "./Auth/Login";
-import ProtectedRoute from "./Auth/ProtectedRoute";
+import MainPage from "./pages/MainPage";
+import Login from "./auth/Login";
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 function App() {
     return (
