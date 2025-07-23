@@ -6,21 +6,18 @@ import useIsMobile from "../hooks/useIsMobile";
 const UserTable = ({ users, pagination, loading, onEdit, onDelete, onPageClick }) => {
     const isMobile = useIsMobile();
 
-    // Cek isi links
-    // console.log("pagination.links detail", pagination.links.map(l => ({ label: l.label, url: l.url })));
-
-    // Cari prev/next sesuai label API
     const prevLink = pagination.links.find(link => link.label.includes("Sebelumnya"));
     const nextLink = pagination.links.find(link => link.label.includes("Berikutnya"));
 
-    // Debug
-    // console.log("prevLink", prevLink);
-    // console.log("nextLink", nextLink);
 
     return (
         <>
             {loading ? (
-                <div>Loading...</div>
+                <div className="text-center my-5">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             ) : (
                 <Table responsive striped bordered hover className="w-100 text-nowrap">
                     <thead>

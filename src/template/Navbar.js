@@ -1,9 +1,13 @@
 import React from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Button from "react-bootstrap/Button";
 
-function Navbar() {
+function AppNavbar() {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
@@ -45,33 +49,35 @@ function Navbar() {
     };
 
     return (
-        <nav className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div className="container-fluid">
-                <Link className="navbar-brand" to="/">Fixed navbar</Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarCollapse">
-                    <ul className="navbar-nav me-auto mb-2 mb-md-0">
-                        <li className="nav-item">
-                            <Link to="/" className="nav-link active" aria-current="page">Home</Link>
-                        </li>
-                    </ul>
-                    <div className="d-flex">
-                        {
-                            token ? (
-                                <button onClick={handleLogout} className="btn btn-outline-danger">
-                                    Logout
-                                </button>
-                            ) : (
-                                <Link to="/login" className="btn btn-outline-success">Login</Link>
-                            )
-                        }
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <Navbar bg="dark" variant="dark" expand="md" fixed="top">
+            <Container>
+                <Navbar.Brand as={Link} to="/">
+                    {/* Bisa pakai logo di sini jika mau */}
+                    {/* <img src="/img/logo.svg" width="30" height="30" alt="Logo" className="d-inline-block align-top" /> */}
+                    MyApp
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Link as={Link} to="/" active={window.location.pathname === "/"}>Home</Nav.Link>
+
+                        <Nav.Link as={Link} to="/users" active={window.location.pathname === "/users"}>Users</Nav.Link>
+                    </Nav>
+                    <Nav>
+                        {token ? (
+                            <Button variant="outline-danger" onClick={handleLogout}>
+                                Logout
+                            </Button>
+                        ) : (
+                            <Button as={Link} to="/login" variant="outline-success">
+                                Login
+                            </Button>
+                        )}
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     );
 }
 
-export default Navbar;
+export default AppNavbar;

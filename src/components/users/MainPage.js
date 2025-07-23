@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "../api/axios";
+import axios from "../../api/axios";
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Swal from 'sweetalert2';
 
-import UserTable from "../components/users/UserTable";
-import UserModal from "../components/users/Modal";
+import UserTable from "./UserTable";
+import UserModal from "./Modal";
 
 function MainPage() {
     const [users, setUsers] = useState([]);

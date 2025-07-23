@@ -47,8 +47,17 @@ function Login() {
     };
 
     return(
-        <main className="container" style={{marginTop: '100px', maxWidth: '400px'}}>
-            <div className="card shadow">
+        <main
+            className="container"
+            style={{
+                minHeight: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                maxWidth: '400px'
+            }}
+        >
+            <div className="card shadow w-100">
                 <div className="card-body">
                     <h3 className="mb-4 text-center">Login</h3>
                     <form onSubmit={handleSubmit} noValidate>
@@ -60,7 +69,10 @@ function Login() {
                                 id="email"
                                 required
                                 value={email}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={e => {
+                                    setEmail(e.target.value);
+                                    if (error.email) setError(prev => ({ ...prev, email: undefined }));
+                                }}
                                 name="email"
                             />
                             {error.email && (
@@ -77,7 +89,10 @@ function Login() {
                                 id="password"
                                 required
                                 value={password}
-                                onChange={e => setPassword(e.target.value)}
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    if (error.password) setError(prev => ({ ...prev, password: undefined }));
+                                }}
                                 name="password"
                             />
                             {error.password && (
