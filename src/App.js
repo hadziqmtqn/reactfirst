@@ -8,6 +8,7 @@ import { AppInfoProvider } from "./context/AppInfoContext";
 import UserPage from "./dashboard/users/MainPage";
 import LoginPage from "./auth/Login";
 import OrganizationPage from "./dashboard/organization/Page";
+import ZohoConfigPage from "./dashboard/zoho-config/Page";
 
 // Layout dengan Navbar
 function LayoutWithNavbar() {
@@ -41,6 +42,12 @@ function App() {
                         <Route path="/organization" element={
                             <ProtectedRoute>
                                 <OrganizationPage />
+                            </ProtectedRoute>
+                        }/>
+
+                        <Route path="/zoho-config" element={
+                            <ProtectedRoute>
+                                <ZohoConfigPage />
                             </ProtectedRoute>
                         }/>
                     </Route>

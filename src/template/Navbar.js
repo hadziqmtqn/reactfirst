@@ -74,10 +74,12 @@ function AppNavbar() {
                         <Nav.Link as={Link} to="/users" active={window.location.pathname === "/users"}>Users</Nav.Link>
 
                         <Nav.Link as={Link} to="/organization" active={window.location.pathname === "/organization"}>Organization</Nav.Link>
+
+                        <Nav.Link as={Link} to="/zoho-config" active={window.location.pathname === "/zoho-config"}>Zoho Config</Nav.Link>
                     </Nav>
                     <Nav>
                         {token ? (
-                            <Button variant="outline-danger" onClick={handleLogout}>
+                            <Button variant="outline-warning" onClick={handleLogout}>
                                 Logout
                             </Button>
                         ) : (
