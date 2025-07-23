@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../../api/axios"; // gunakan instance custom
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Swal from "sweetalert2";
-
-// APP URL
-const APP_URL = process.env.REACT_APP_API_URL;
 
 function OrganizationPage() {
     const [organization, setOrganization] = useState({
@@ -23,10 +20,7 @@ function OrganizationPage() {
     const fetchOrganization = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-            const res = await axios.get(`${APP_URL}/organization`, { headers });
+            const res = await axiosInstance.get("/organization");
             if (res.data.success && res.data.data) {
                 setOrganization({
                     id: res.data.data.id,
@@ -71,13 +65,10 @@ function OrganizationPage() {
         setFormLoading(true);
         setErrors({});
         try {
-            const token = localStorage.getItem('token');
-            const headers = token ? { Authorization: `Bearer ${token}` } : {};
-            
-            const res = await axios.post(`${APP_URL}/organization/store`, {
+            const res = await axiosInstance.post("/organization/store", {
                 name: organization.name,
                 organization_id: organization.organizationId
-            }, { headers });
+            });
             if (res.data.success) {
                 Swal.fire({
                     icon: "success",
@@ -118,8 +109,10 @@ function OrganizationPage() {
                 </Card.Header>
                 <Card.Body>
                     {loading ? (
-                        <div style={{ textAlign: "center", margin: "3rem 0" }}>
-                            <Spinner animation="border" role="status" />
+                        <div className="text-center my-5">
+                            <Spinner animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner>
                         </div>
                     ) : (
                         <Form onSubmit={handleSubmit} noValidate>
