@@ -4,8 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Swal from 'sweetalert2';
 
-import UserTable from "./UserTable";
-import UserModal from "./Modal";
+import UserTable from "../../components/users/UserTable";
+import UserModal from "../../components/users/Modal";
 
 function MainPage() {
     const [users, setUsers] = useState([]);

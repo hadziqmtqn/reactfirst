@@ -7,7 +7,10 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
 
+import { useAppInfo } from "../context/AppInfoContext"; // Import context
+
 function AppNavbar() {
+    const { appName, appLogo } = useAppInfo(); // Use context to get app info
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
@@ -52,9 +55,16 @@ function AppNavbar() {
         <Navbar bg="dark" variant="dark" expand="md" fixed="top">
             <Container>
                 <Navbar.Brand as={Link} to="/">
-                    {/* Bisa pakai logo di sini jika mau */}
-                    {/* <img src="/img/logo.svg" width="30" height="30" alt="Logo" className="d-inline-block align-top" /> */}
-                    MyApp
+                    {appLogo && (
+                        <img
+                            src={appLogo}
+                            width="30"
+                            height="30"
+                            alt={appName}
+                            className="d-inline-block align-top me-2"
+                        />
+                    )}
+                    {appName || "MyApp"}
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
