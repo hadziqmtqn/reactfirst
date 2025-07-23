@@ -29,7 +29,7 @@ function Login() {
                 `${API_URL}/login`,
                 { email, password }
             );
-            localStorage.setItem('token', response.data.data.token);
+            localStorage.setItem('token', response.data.data);
             navigate('/');
         } catch (err) {
             if (err.response && err.response.status === 422) {
