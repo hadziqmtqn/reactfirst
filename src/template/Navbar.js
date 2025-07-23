@@ -6,6 +6,8 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
+import DropdownButton from "react-bootstrap/DropdownButton";
 import { useAppInfo } from "../context/AppInfoContext";
 
 function AppNavbar() {
@@ -69,11 +71,17 @@ function AppNavbar() {
                             </>
                         )}
                     </Nav>
+                    {/* <Navbar.Text>
+                        Signed in as: <a href="#login">Mark Otto</a>
+                    </Navbar.Text> */}
                     <Nav>
                         {token ? (
-                            <Button variant="outline-warning" onClick={handleLogout}>
-                                Logout
-                            </Button>
+                            <DropdownButton title="Profile" id="basic-nav-dropdown">
+                                <Dropdown.Item as={NavLink} to="/profile">My Profile</Dropdown.Item>
+                                <Dropdown.Item as={NavLink} to="/settings">Settings</Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item as="button" className="text-danger" onClick={handleLogout}>Logout</Dropdown.Item>
+                            </DropdownButton>
                         ) : (
                             <Button as={NavLink} to="/login" variant="outline-success">
                                 Login

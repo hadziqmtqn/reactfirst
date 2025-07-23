@@ -12,9 +12,7 @@ export function AppInfoProvider({ children }) {
     useEffect(() => {
         async function fetchAppInfo() {
             try {
-                const token = localStorage.getItem("token");
-                const headers = token ? { Authorization: `Bearer ${token}` } : {};
-                const res = await axios.get(`${API_URL}/app`, { headers });
+                const res = await axios.get(`${API_URL}/app`);
                 
                 if (res.data.success && res.data.data) {
                     setInfo({

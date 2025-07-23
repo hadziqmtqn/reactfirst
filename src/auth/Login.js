@@ -2,8 +2,12 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { useAppInfo } from "../context/AppInfoContext";
 
 function Login() {
+    const { appName, appLogo } = useAppInfo();
+
+    // State untuk menyimpan input email, password, error, dan loading
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState({});
@@ -59,7 +63,20 @@ function Login() {
         >
             <div className="card shadow w-100">
                 <div className="card-body">
-                    <h3 className="mb-4 text-center">Login</h3>
+                    <h3 className="mb-4 text-center">
+                        <a href="/" className="text-decoration-none">
+                            {appLogo && (
+                                <img
+                                    src={appLogo}
+                                    alt="Logo"
+                                    width="50"
+                                    className="mb-2 me-2"
+                                />
+                            )}
+                            {appName || "MyApp"}
+                        </a>
+                    </h3>
+                    <p className="text-center">Silakan masuk untuk melanjutkan</p>
                     <form onSubmit={handleSubmit} noValidate>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">Email address</label>
