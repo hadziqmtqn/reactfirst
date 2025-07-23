@@ -72,6 +72,8 @@ function AppNavbar() {
                         <Nav.Link as={Link} to="/" active={window.location.pathname === "/"}>Home</Nav.Link>
 
                         <Nav.Link as={Link} to="/users" active={window.location.pathname === "/users"}>Users</Nav.Link>
+
+                        <Nav.Link as={Link} to="/organization" active={window.location.pathname === "/organization"}>Organization</Nav.Link>
                     </Nav>
                     <Nav>
                         {token ? (
