@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../api/axios"; // gunakan instance custom
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
-import Alert from "react-bootstrap/Alert";
+import axiosInstance from "../../api/axios";
+
+import { Container, Card, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
+
 import Swal from "sweetalert2";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 import { useAppInfo } from "../../context/AppInfoContext";
@@ -48,7 +43,7 @@ function ZohoConfigPage() {
                 });
             }
         } catch (err) {
-            Swal.fire({
+            await Swal.fire({
                 icon: "error",
                 title: "Gagal mengambil data",
                 text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -102,17 +97,17 @@ function ZohoConfigPage() {
                 refresh_token: zohoConfig.refreshToken
             });
             if (res.data.success) {
-                Swal.fire({
+                await Swal.fire({
                     icon: "success",
                     title: "Berhasil",
                     text: "Data berhasil diupdate.",
                     showConfirmButton: false,
                     timer: 1500
                 });
-                fetchZohoConfig();
+                await fetchZohoConfig();
             } else {
                 // Jika error bukan validasi, tampilkan swal
-                Swal.fire({
+                await Swal.fire({
                     icon: "error",
                     title: "Gagal update",
                     text: typeof res.data.message === "string" ? res.data.message : "Terjadi kesalahan."
@@ -123,7 +118,7 @@ function ZohoConfigPage() {
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                Swal.fire({
+                await Swal.fire({
                     icon: "error",
                     title: "Gagal update",
                     text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -156,7 +151,7 @@ function ZohoConfigPage() {
                             <Row className="mb-3">
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Code</Form.Label>
+                                        <Form.Label htmlFor="code" column="">Code</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="code"
@@ -173,7 +168,7 @@ function ZohoConfigPage() {
 
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Client ID</Form.Label>
+                                        <Form.Label htmlFor="clientId" column="">Client ID</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="clientId"
@@ -190,7 +185,7 @@ function ZohoConfigPage() {
 
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Client Secret</Form.Label>
+                                        <Form.Label htmlFor="clientSecret" column="">Client Secret</Form.Label>
                                         <Form.Control
                                             type="password"
                                             name="clientSecret"
@@ -207,7 +202,7 @@ function ZohoConfigPage() {
 
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Redirect URI</Form.Label>
+                                        <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="redirectUrl"
@@ -224,7 +219,7 @@ function ZohoConfigPage() {
 
                                 <Col xs={12} md={6}>
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Refresh Token</Form.Label>
+                                        <Form.Label htmlFor="refreshToken" column="">Refresh Token</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="refreshToken"

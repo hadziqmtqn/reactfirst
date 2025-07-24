@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../api/axios";
-import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
+
+import { Container, Card} from "react-bootstrap";
+
 import Swal from 'sweetalert2';
 
 import UserTable from "../../components/users/UserTable";
@@ -119,20 +120,20 @@ function Page() {
                 await axios.post("/users/store", formData);
                 setModalLoading(false);
                 setShowModal(false);
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
                     text: 'User berhasil dibuat.',
                     showConfirmButton: false,
                     timer: 1500
                 });
-                fetchUsers(pagination.currentPage, search);
+                await fetchUsers(pagination.currentPage, search);
             } catch (err) {
                 setModalLoading(false);
                 if (err.response && err.response.status === 422) {
                     setFormError(err.response.data.message || {});
                 } else {
-                    Swal.fire({
+                    await Swal.fire({
                         icon: 'error',
                         title: 'Gagal membuat user',
                         text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -144,7 +145,7 @@ function Page() {
                 await axios.put(`/users/${editUserId}/update`, formData);
                 setModalLoading(false);
                 setShowModal(false);
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
                     text: 'User berhasil diupdate.',
@@ -157,7 +158,7 @@ function Page() {
                 if (err.response && err.response.status === 422) {
                     setFormError(err.response.data.message || {});
                 } else {
-                    Swal.fire({
+                    await Swal.fire({
                         icon: 'error',
                         title: 'Gagal update user',
                         text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -181,7 +182,7 @@ function Page() {
         if (result.isConfirmed) {
             try {
                 await axios.delete(`/users/${user.id}/delete`);
-                Swal.fire({
+                await Swal.fire({
                     icon: 'success',
                     title: 'Berhasil!',
                     text: 'User berhasil dihapus.',
@@ -190,7 +191,7 @@ function Page() {
                 });
                 await fetchUsers(pagination.currentPage, search);
             } catch (err) {
-                Swal.fire({
+                await Swal.fire({
                     icon: 'error',
                     title: 'Gagal hapus user',
                     text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."

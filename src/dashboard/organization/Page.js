@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../api/axios"; // gunakan instance custom
-import Container from "react-bootstrap/Container";
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
+import axiosInstance from "../../api/axios";
+
+import { Container, Card, Form, Button, Spinner } from "react-bootstrap";
+
 import Swal from "sweetalert2";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 import { useAppInfo } from "../../context/AppInfoContext";
@@ -122,7 +120,7 @@ function OrganizationPage() {
                     ) : (
                         <Form onSubmit={handleSubmit} noValidate>
                             <Form.Group className="mb-3">
-                                <Form.Label>Organization Name</Form.Label>
+                                <Form.Label htmlFor="name" column="">Organization Name</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="name"
@@ -136,7 +134,7 @@ function OrganizationPage() {
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <Form.Label>Organization ID</Form.Label>
+                                <Form.Label column="" htmlFor="organizationId">Organization ID</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="organizationId"

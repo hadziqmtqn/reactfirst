@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Card from 'react-bootstrap/Card';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Spinner from 'react-bootstrap/Spinner';
-import Alert from 'react-bootstrap/Alert';
-import Form from 'react-bootstrap/Form';
-import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import axios from '../../api/axios';
-import Button from "react-bootstrap/Button";
+import {
+    Card,
+    Row,
+    Col,
+    Table,
+    Container,
+    Spinner,
+    Alert,
+    Form,
+    Button
+} from 'react-bootstrap';
+import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 
