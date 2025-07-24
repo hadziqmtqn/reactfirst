@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../api/axios';
+import { Link } from "react-router-dom";
+
 import {
     Card,
     Row,
@@ -11,6 +13,7 @@ import {
     Form,
     Button
 } from 'react-bootstrap';
+
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
@@ -24,6 +27,7 @@ function CustomerTablePage() {
     const [organizationId, setOrganizationId] = useState('');
     const [organizations, setOrganizations] = useState([]);
     const [customers, setCustomers] = useState([]);
+    const [organizationSlug, setOrganizationSlug] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -50,6 +54,7 @@ function CustomerTablePage() {
     useEffect(() => {
         if (!organizationId) {
             setCustomers([]);
+            setOrganizationSlug([]);
             return;
         }
         setLoading(true);
@@ -61,7 +66,9 @@ function CustomerTablePage() {
             }
         })
         .then(res => {
-            setCustomers(res.data?.data || []);
+            const data = res.data?.data || {};
+            setCustomers(data.custumers || []);
+            setOrganizationSlug(data.organizationSlug || '');
             setLoading(false);
         })
         .catch(() => {
@@ -86,7 +93,7 @@ function CustomerTablePage() {
                         </Col>
                         <Col md={6}>
                             <Form.Control
-                                type="text"
+                                type="search"
                                 placeholder="Cari customer..."
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
@@ -132,7 +139,11 @@ function CustomerTablePage() {
                                             <td>{c.company_name}</td>
                                             <td>{c.website}</td>
                                             <td>
-                                                <Button as="a" variant="primary" className="btn-sm">
+                                                <Button
+                                                    as={Link}
+                                                    to={`/customers/${organizationSlug}/${c.contact_id}`}
+                                                    variant="primary"
+                                                >
                                                     <i className="bi bi-eye"></i> Detail
                                                 </Button>
                                             </td>

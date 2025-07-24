@@ -1,6 +1,6 @@
 import React from "react";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+
+import { Modal, Button, FormFloating, Form } from "react-bootstrap";
 
 const UserModal = ({
    show,
@@ -20,82 +20,84 @@ const UserModal = ({
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {/* Name */}
-                <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
+                <FormFloating className="mb-3">
+                    <Form.Control
                         type="text"
-                        className={`form-control ${formError.name ? 'is-invalid' : ''}`}
                         name="name"
                         value={formData.name}
                         onChange={onChange}
+                        placeholder="Name"
+                        className={`form-control ${formError.name ? 'is-invalid' : ''}`}
                         required
                     />
+                    <label>Name</label>
                     {formError.name && (
                         <div className="invalid-feedback">
                             {formError.name[0]}
                         </div>
                     )}
-                </div>
-                {/* Email */}
-                <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
+                </FormFloating>
+                <FormFloating className="mb-3">
+                    <Form.Control
                         type="email"
-                        className={`form-control ${formError.email ? 'is-invalid' : ''}`}
                         name="email"
                         value={formData.email}
                         onChange={onChange}
+                        placeholder="Email"
+                        className={`form-control ${formError.email ? 'is-invalid' : ''}`}
                         required
                     />
+                    <label>Email</label>
                     {formError.email && (
                         <div className="invalid-feedback">
                             {formError.email[0]}
                         </div>
                     )}
-                </div>
-                {/* Password */}
-                <div className="mb-3">
-                    <label className="form-label">Password {mode === 'edit' && <small>(Kosongkan jika tidak ganti)</small>}</label>
-                    <input
+                </FormFloating>
+                <FormFloating className="mb-3">
+                    <Form.Control
                         type="password"
-                        className={`form-control ${formError.password ? 'is-invalid' : ''}`}
                         name="password"
                         value={formData.password}
                         onChange={onChange}
+                        placeholder="Password"
+                        className={`form-control ${formError.password ? 'is-invalid' : ''}`}
                         required={mode === 'create'}
                         autoComplete="new-password"
                     />
+                    <label>Password {mode === 'edit' && <small>(Kosongkan jika tidak ganti)</small>}</label>
                     {formError.password && (
                         <div className="invalid-feedback">
                             {formError.password[0]}
                         </div>
                     )}
-                </div>
-                {/* Confirm Password */}
-                <div className="mb-3">
-                    <label className="form-label">Confirm Password</label>
-                    <input
+                </FormFloating>
+                <FormFloating className="mb-3">
+                    <Form.Control
                         type="password"
-                        className={`form-control ${formError.password_confirmation ? 'is-invalid' : ''}`}
                         name="password_confirmation"
                         value={formData.password_confirmation}
                         onChange={onChange}
+                        placeholder="Confirm Password"
+                        className={`form-control ${formError.password_confirmation ? 'is-invalid' : ''}`}
                         required={mode === 'create'}
                         autoComplete="new-password"
                     />
+                    <label>Confirm Password</label>
                     {formError.password_confirmation && (
                         <div className="invalid-feedback">
                             {formError.password_confirmation[0]}
                         </div>
                     )}
-                </div>
+                </FormFloating>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="secondary" onClick={onClose} disabled={loading}>Cancel</Button>
-                <Button type="submit" variant="primary" disabled={loading}>
-                    {loading ? (mode === 'create' ? "Saving..." : "Updating...") : (mode === 'create' ? "Save" : "Update")}
-                </Button>
+                <div className="d-grid gap-2 w-100">
+                    <Button type="submit" variant="primary" disabled={loading} size={"lg"}>
+                        {loading ? (mode === 'create' ? "Saving..." : "Updating...") : (mode === 'create' ? "Save" : "Update")}
+                    </Button>
+                    <Button variant="secondary" onClick={onClose} disabled={loading} size={"lg"}>Cancel</Button>
+                </div>
             </Modal.Footer>
         </form>
     </Modal>

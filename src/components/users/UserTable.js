@@ -1,5 +1,12 @@
 import React from "react";
-import Table from 'react-bootstrap/Table';
+
+import {
+    Table,
+    Button,
+    Spinner,
+    ButtonGroup
+} from 'react-bootstrap';
+
 import Avatar from "./Avatar";
 import useIsMobile from "../hooks/useIsMobile";
 
@@ -14,9 +21,9 @@ const UserTable = ({ users, pagination, loading, onEdit, onDelete, onPageClick }
         <>
             {loading ? (
                 <div className="text-center my-5">
-                    <div className="spinner-border" role="status">
+                    <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
-                    </div>
+                    </Spinner>
                 </div>
             ) : (
                 <Table responsive striped bordered hover className="w-100 text-nowrap">
@@ -45,18 +52,20 @@ const UserTable = ({ users, pagination, loading, onEdit, onDelete, onPageClick }
                                 </td>
                                 <td>{user.email}</td>
                                 <td>
-                                    <button
-                                        className="btn btn-sm btn-warning me-2"
-                                        onClick={() => onEdit(user)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-sm btn-danger"
-                                        onClick={() => onDelete(user)}
-                                    >
-                                        Hapus
-                                    </button>
+                                    <ButtonGroup>
+                                        <Button
+                                            variant="warning"
+                                            onClick={() => onEdit(user)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            variant="danger"
+                                            onClick={() => onDelete(user)}
+                                        >
+                                            Hapus
+                                        </Button>
+                                    </ButtonGroup>
                                 </td>
                             </tr>
                         ))

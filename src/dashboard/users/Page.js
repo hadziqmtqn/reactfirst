@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "../../api/axios";
 
-import { Container, Card} from "react-bootstrap";
+import {
+    Container,
+    Card,
+    Button,
+    InputGroup,
+    Form
+} from "react-bootstrap";
 
 import Swal from 'sweetalert2';
 
 import UserTable from "../../components/users/UserTable";
 import UserModal from "../../components/users/Modal";
-import OrganizationSelect from "../../components/organization/OrganizationSelect";
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 
@@ -35,9 +40,6 @@ function Page() {
     const [formError, setFormError] = useState({});
     const [modalLoading, setModalLoading] = useState(false);
     const [editUserId, setEditUserId] = useState(null);
-
-    // Select organization state
-    const [organizationId, setOrganizationId] = useState("");
 
     // Fetch
     const fetchUsers = async (page = 1, keyword = "") => {
@@ -205,27 +207,27 @@ function Page() {
             <Card>
                 <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
                     <span className="text-primary">User Management</span>
-                    <button className="btn btn-secondary btn-sm" onClick={handleShowModal}>Add User</button>
+                    <Button variant="secondary" onClick={handleShowModal}>
+                        <i className="bi bi-plus-circle me-2"></i>Add User
+                    </Button>
                 </Card.Header>
                 <Card.Body>
                     <form className="mb-3 d-flex" onSubmit={handleSearch}>
-                        <input
-                            type="text"
-                            className="form-control me-2"
-                            placeholder="Search name or email..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                        <button type="submit" className="btn btn-primary">Search</button>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                type="search"
+                                placeholder="Search name or email..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                aria-label="Search"
+                                aria-describedby="button-addon2"
+                            />
+                            <Button variant="primary" type="submit">
+                                <i className="bi bi-search me-2"></i>Search
+                            </Button>
+                        </InputGroup>
                     </form>
 
-                    <OrganizationSelect
-                        value={organizationId}
-                        onChange={(e) => setOrganizationId(e.target.value)}
-                        name="organization_id"
-                        placeholder="Pilih Organisasi"
-                        className="mb-3"
-                    />
                     <UserTable
                         users={users}
                         pagination={pagination}
