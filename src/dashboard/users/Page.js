@@ -10,7 +10,7 @@ import OrganizationSelect from "../../components/organization/OrganizationSelect
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 
-function MainPage() {
+function Page() {
     const { appName } = useAppInfo();
     usePageTitle(`Users | ${appName}`);
 
@@ -249,4 +249,4 @@ function MainPage() {
     );
 }
 
-export default MainPage;
+export default Page;

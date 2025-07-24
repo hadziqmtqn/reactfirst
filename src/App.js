@@ -7,7 +7,7 @@ import { AppInfoProvider } from "./context/AppInfoContext";
 import AppInfoUpdater from "./components/AppMetaUpdater";
 import NotFound from './pages/NotFound';
 
-import UserPage from "./dashboard/users/MainPage";
+import UserPage from "./dashboard/users/Page";
 import LoginPage from "./auth/Login";
 import OrganizationPage from "./dashboard/organization/Page";
 import ZohoConfigPage from "./dashboard/zoho-config/Page";
