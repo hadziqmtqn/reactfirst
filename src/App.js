@@ -4,6 +4,7 @@ import Navbar from "./template/Navbar";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
 import { AppInfoProvider } from "./context/AppInfoContext";
+import NotFound from './pages/NotFound';
 
 import UserPage from "./dashboard/users/MainPage";
 import LoginPage from "./auth/Login";
@@ -51,9 +52,12 @@ function App() {
                             </ProtectedRoute>
                         }/>
                     </Route>
+
                     <Route element={<LayoutNoNavbar />}>
                         <Route path="/login" element={<LoginPage />} />
                     </Route>
+                    
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </Router>
         </AppInfoProvider>

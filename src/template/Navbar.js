@@ -71,12 +71,13 @@ function AppNavbar() {
                             </>
                         )}
                     </Nav>
-                    {/* <Navbar.Text>
-                        Signed in as: <a href="#login">Mark Otto</a>
-                    </Navbar.Text> */}
                     <Nav>
                         {token ? (
-                            <DropdownButton title="Profile" id="basic-nav-dropdown">
+                            <DropdownButton title={
+                                    <>
+                                        <i className="bi bi-person-circle me-2"></i>Profile
+                                    </>
+                                } id="basic-nav-dropdown">
                                 <Dropdown.Item as={NavLink} to="/profile">My Profile</Dropdown.Item>
                                 <Dropdown.Item as={NavLink} to="/settings">Settings</Dropdown.Item>
                                 <Dropdown.Divider />
