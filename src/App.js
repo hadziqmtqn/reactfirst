@@ -12,8 +12,8 @@ import LoginPage from "./auth/Login";
 import OrganizationPage from "./dashboard/organization/Page";
 import ZohoConfigPage from "./dashboard/zoho-config/Page";
 import CustomerTablePage from './dashboard/customers/Page';
-import CustomerDetailPage
-    from "./dashboard/customers/DetailPage";
+import CustomerDetailPage from "./dashboard/customers/DetailPage";
+import { AuthMeProvider } from "./context/AuthMeContext";
 
 // Layout dengan Navbar
 function LayoutWithNavbar() {
@@ -34,49 +34,51 @@ function App() {
     return (
         <AppInfoProvider>
             <AppInfoUpdater />
-            <Router>
-                <Routes>
-                    <Route element={<LayoutWithNavbar />}>
-                        <Route path="/" element={<LandingPage />} />
-                        
-                        <Route path="/users" element={
-                            <ProtectedRoute>
-                                <UserPage />
-                            </ProtectedRoute>
-                        }/>
+            <AuthMeProvider>
+                <Router>
+                    <Routes>
+                        <Route element={<LayoutWithNavbar />}>
+                            <Route path="/" element={<LandingPage />} />
 
-                        <Route path="/customers" element={
-                            <ProtectedRoute>
-                                <CustomerTablePage />
-                            </ProtectedRoute>
-                        }/>
+                            <Route path="/users" element={
+                                <ProtectedRoute>
+                                    <UserPage />
+                                </ProtectedRoute>
+                            }/>
 
-                        <Route path="/customers/:organization/:customerId" element={
-                            <ProtectedRoute>
-                                <CustomerDetailPage />
-                            </ProtectedRoute>
-                        }/>
+                            <Route path="/customers" element={
+                                <ProtectedRoute>
+                                    <CustomerTablePage />
+                                </ProtectedRoute>
+                            }/>
 
-                        <Route path="/organization" element={
-                            <ProtectedRoute>
-                                <OrganizationPage />
-                            </ProtectedRoute>
-                        }/>
+                            <Route path="/customers/:organization/:customerId" element={
+                                <ProtectedRoute>
+                                    <CustomerDetailPage />
+                                </ProtectedRoute>
+                            }/>
 
-                        <Route path="/zoho-config" element={
-                            <ProtectedRoute>
-                                <ZohoConfigPage />
-                            </ProtectedRoute>
-                        }/>
-                    </Route>
+                            <Route path="/organization" element={
+                                <ProtectedRoute>
+                                    <OrganizationPage />
+                                </ProtectedRoute>
+                            }/>
 
-                    <Route element={<LayoutNoNavbar />}>
-                        <Route path="/login" element={<LoginPage />} />
-                    </Route>
-                    
-                    <Route path="*" element={<NotFound />} />
-                </Routes>
-            </Router>
+                            <Route path="/zoho-config" element={
+                                <ProtectedRoute>
+                                    <ZohoConfigPage />
+                                </ProtectedRoute>
+                            }/>
+                        </Route>
+
+                        <Route element={<LayoutNoNavbar />}>
+                            <Route path="/login" element={<LoginPage />} />
+                        </Route>
+
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </Router>
+            </AuthMeProvider>
         </AppInfoProvider>
     );
 }

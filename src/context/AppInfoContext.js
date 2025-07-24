@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
-const AppInfoContext = createContext();
+const AppInfoContext = createContext(undefined);
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const useAppInfo = () => useContext(AppInfoContext);
 
 export function AppInfoProvider({ children }) {
-    const [info, setInfo] = useState({ appName: "", appLogo: "" });
+    const [info, setInfo] = useState({
+        appName: "",
+        appLogo: ""
+    });
 
     useEffect(() => {
         async function fetchAppInfo() {

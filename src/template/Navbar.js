@@ -2,18 +2,25 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+
+import {
+    Container,
+    Navbar,
+    Nav,
+    Button,
+    Dropdown,
+    NavDropdown
+} from "react-bootstrap";
+
 import { useAppInfo } from "../context/AppInfoContext";
+import { useAuthMe } from "../context/AuthMeContext";
 
 function AppNavbar() {
     const { appName, appLogo } = useAppInfo();
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+    const authMe = useAuthMe();
+
     const API_URL = process.env.REACT_APP_API_URL;
 
     const handleLogout = async () => {
@@ -67,25 +74,35 @@ function AppNavbar() {
                             <>
                                 <Nav.Link as={NavLink} to="/users">Users</Nav.Link>
                                 <Nav.Link as={NavLink} to="/customers">Customers</Nav.Link>
-                                <Nav.Link as={NavLink} to="/organization">Organization</Nav.Link>
-                                <Nav.Link as={NavLink} to="/zoho-config">Zoho Config</Nav.Link>
+                                <NavDropdown title="Setting" id="basic-nav-dropdown">
+                                    <NavDropdown.Item as={NavLink} to="/organization">Organization</NavDropdown.Item>
+                                    <NavDropdown.Item as={NavLink} to="/zoho-config">Zoho Config</NavDropdown.Item>
+                                </NavDropdown>
                             </>
                         )}
                     </Nav>
                     <Nav>
                         {token ? (
-                            <DropdownButton title={
-                                    <>
-                                        <i className="bi bi-person-circle me-2"></i>Profile
-                                    </>
-                                } id="basic-nav-dropdown">
-                                <Dropdown.Item as={NavLink} to="/profile">My Profile</Dropdown.Item>
-                                <Dropdown.Item as={NavLink} to="/settings">Settings</Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item as="button" className="text-danger" onClick={handleLogout}>Logout</Dropdown.Item>
-                            </DropdownButton>
+                            <Dropdown align="end">
+                                <Dropdown.Toggle as="a" className="d-block link-light text-decoration-none" style={{ cursor: "pointer", padding: 0 }}>
+                                    <img
+                                        src={authMe.avatar}
+                                        alt="Avatar"
+                                        width="32"
+                                        height="32"
+                                        className="rounded-circle"
+                                    />
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu className="text-small">
+                                    <Dropdown.Item as={NavLink} to="/new-project">New project...</Dropdown.Item>
+                                    <Dropdown.Item as={NavLink} to="/settings">Settings</Dropdown.Item>
+                                    <Dropdown.Item as={NavLink} to="/profile">Profile</Dropdown.Item>
+                                    <Dropdown.Divider />
+                                    <Dropdown.Item as="button" className="text-danger" onClick={handleLogout}>Sign out</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         ) : (
-                            <Button as={NavLink} to="/login" variant="outline-success">
+                            <Button as={NavLink} to="/login" variant="success">
                                 Login
                             </Button>
                         )}
