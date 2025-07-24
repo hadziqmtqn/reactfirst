@@ -9,15 +9,12 @@ import {
     Alert,
     Row,
     Col,
-    Button
 } from "react-bootstrap";
 
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
-import { useNavigate } from "react-router-dom";
 
 export default function CustomerDetailPage() {
-    const navigate = useNavigate();
     const { organization, customerId } = useParams();
     const { appName } = useAppInfo();
     usePageTitle(`Customer Detail | ${appName}`);
@@ -60,29 +57,48 @@ export default function CustomerDetailPage() {
 
     return (
         <Container className="container" style={{ marginTop: '80px' }}>
-            <Card>
-                <Card.Header as="h5">
-                    <div className="d-flex justify-content-between align-items-center">
-                        <span><i className="bi bi-person-circle me-2 text-primary"></i>{customer.contact_name}</span>
-                        <Button variant="primary" onClick={() => navigate(-1)}>
-                            Kembali
-                        </Button>
-                    </div>
-                </Card.Header>
-                <Card.Body>
-                    <Row>
-                        <Col md={6}>
-                            <p><b>Contact Number:</b> {customer.contact_number}</p>
-                            <p><b>Company Name:</b> {customer.company_name}</p>
-                            <p><b>First Name:</b> {customer.first_name}</p>
-                            <p><b>Last Name:</b> {customer.last_name}</p>
-                            <p><b>Department:</b> {customer.department}</p>
-                            <p><b>Designation:</b> {customer.designation}</p>
-                            <p><b>Tax Info:</b> {customer.contact_tax_information}</p>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
+            <Row>
+                <Col xl={4} lg={5} sm={12} className="mb-4">
+                    <Card className="shadow-none">
+                        <Card.Body>
+                            <Card.Title as="h5" className="mb-3 fw-bold text-center">
+                                <img
+                                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(customer.contact_name)}&background=EBF4FF&color=7F9CF5&size=96`}
+                                    alt={customer.contact_name}
+                                    className="rounded-circle mb-3"
+                                    width={96}
+                                    height={96}
+                                />
+                                <Card.Title as="h5" className="mb-3 fw-bold">
+                                    {customer.contact_name}
+                                </Card.Title>
+                            </Card.Title>
+                            <dl>
+                                <dd className="mb-0 small">Contact ID:</dd>
+                                <dt className="mb-2">{customer.contact_id || '-'}</dt>
+                                <dd className="mb-0 small">Contact Number:</dd>
+                                <dt className="mb-2">{customer.contact_number || '-'}</dt>
+                                <dd className="mb-0 small">Company Name:</dd>
+                                <dt className="mb-2">{customer.company_name || '-'}</dt>
+                                <dd className="mb-0 small">Email:</dd>
+                                <dt className="mb-2">{customer.email || '-'}</dt>
+                                <dd className="mb-0 small">Mobile:</dd>
+                                <dt className="mb-2">{customer.mobile || '-'}</dt>
+                                <dd className="mb-0 small">Website:</dd>
+                                <dt className="mb-2">{customer.website || '-'}</dt>
+                            </dl>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col xl={8} lg={7} sm={12}>
+                    <Card className="shadow-none">
+                        <Card.Body>
+                            <Card.Title as="h5" className="mb-3 fw-bold">Update Customer</Card.Title>
+
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </Container>
     );
 }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 import Form from 'react-bootstrap/Form';
+import {
+    FloatingLabel
+} from "react-bootstrap";
 
 function OrganizationSelect({ value, onChange, name = "organization", placeholder = "Pilih Organisasi", ...props }) {
     const [options, setOptions] = useState([]);
@@ -24,20 +27,22 @@ function OrganizationSelect({ value, onChange, name = "organization", placeholde
     }, []);
 
     return (
-        <Form.Select
-            name={name}
-            value={value}
-            onChange={onChange}
-            disabled={loading}
-            {...props}
-        >
-            <option value="">{loading ? 'Memuat...' : placeholder}</option>
-            {options.map(org => (
-                <option key={org.id} value={org.id}>
-                    {org.name}
-                </option>
-            ))}
-        </Form.Select>
+        <FloatingLabel label="Organisasi" className="mb-3">
+            <Form.Select
+                name={name}
+                value={value}
+                onChange={onChange}
+                disabled={loading}
+                {...props}
+            >
+                <option value="">{loading ? 'Memuat...' : placeholder}</option>
+                {options.map(org => (
+                    <option key={org.id} value={org.id}>
+                        {org.name}
+                    </option>
+                ))}
+            </Form.Select>
+        </FloatingLabel>
     );
 }
 

@@ -11,7 +11,8 @@ import {
     Spinner,
     Alert,
     Form,
-    Button
+    Button,
+    FormFloating
 } from 'react-bootstrap';
 
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
@@ -79,9 +80,9 @@ function CustomerTablePage() {
 
     return (
         <Container className="container" style={{ marginTop: '80px' }}>
-            <Card>
-                <Card.Header as="h5">Customer List</Card.Header>
+            <Card className="shadow-sm">
                 <Card.Body>
+                    <Card.Title as="h4" className="mb-4 fw-bold">Customer List</Card.Title>
                     <Row className="mb-3">
                         <Col md={6}>
                             <OrganizationSelect
@@ -92,13 +93,16 @@ function CustomerTablePage() {
                             />
                         </Col>
                         <Col md={6}>
-                            <Form.Control
-                                type="search"
-                                placeholder="Cari customer..."
-                                value={search}
-                                onChange={e => setSearch(e.target.value)}
-                                disabled={loading}
-                            />
+                            <FormFloating>
+                                <Form.Control
+                                    type="search"
+                                    placeholder="Cari customer..."
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                    disabled={loading}
+                                />
+                                <Form.Label column="">Search Customer</Form.Label>
+                            </FormFloating>
                         </Col>
                     </Row>
                     {!organizationId && (

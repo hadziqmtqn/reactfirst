@@ -1,6 +1,11 @@
 import React from "react";
 
-import { Modal, Button, FormFloating, Form } from "react-bootstrap";
+import {
+    Modal,
+    Button,
+    FormFloating,
+    Form
+} from "react-bootstrap";
 
 const UserModal = ({
    show,

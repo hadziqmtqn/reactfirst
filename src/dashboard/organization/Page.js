@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../api/axios";
 
-import { Container, Card, Form, Button, Spinner } from "react-bootstrap";
+import {
+    Container,
+    Card,
+    Form,
+    Button,
+    Spinner,
+    FormFloating
+} from "react-bootstrap";
 
 import Swal from "sweetalert2";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
@@ -32,7 +39,7 @@ function OrganizationPage() {
                 });
             }
         } catch (err) {
-            Swal.fire({
+            await Swal.fire({
                 icon: "error",
                 title: "Gagal mengambil data",
                 text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -73,17 +80,17 @@ function OrganizationPage() {
                 organization_id: organization.organizationId
             });
             if (res.data.success) {
-                Swal.fire({
+                await Swal.fire({
                     icon: "success",
                     title: "Berhasil",
                     text: "Data organisasi berhasil diupdate.",
                     showConfirmButton: false,
                     timer: 1500
                 });
-                fetchOrganization();
+                await fetchOrganization();
             } else {
                 // Jika error bukan validasi, tampilkan swal
-                Swal.fire({
+                await Swal.fire({
                     icon: "error",
                     title: "Gagal update",
                     text: typeof res.data.message === "string" ? res.data.message : "Terjadi kesalahan."
@@ -94,7 +101,7 @@ function OrganizationPage() {
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                Swal.fire({
+                await Swal.fire({
                     icon: "error",
                     title: "Gagal update",
                     text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
@@ -106,11 +113,9 @@ function OrganizationPage() {
 
     return (
         <Container style={{ marginTop: "80px" }}>
-            <Card>
-                <Card.Header as="h5">
-                    Organization Settings
-                </Card.Header>
+            <Card className="shadow-sm">
                 <Card.Body>
+                    <Card.Title as="h4" className="mb-4 fw-bold">Organization Settings</Card.Title>
                     {loading ? (
                         <div className="text-center my-5">
                             <Spinner animation="border" role="status">
@@ -119,8 +124,7 @@ function OrganizationPage() {
                         </div>
                     ) : (
                         <Form onSubmit={handleSubmit} noValidate>
-                            <Form.Group className="mb-3">
-                                <Form.Label htmlFor="name" column="">Organization Name</Form.Label>
+                            <FormFloating className="mb-3">
                                 <Form.Control
                                     type="text"
                                     name="name"
@@ -128,13 +132,14 @@ function OrganizationPage() {
                                     onChange={handleChange}
                                     isInvalid={!!errors.name}
                                     required
+                                    placeholder="Organization Name"
                                 />
+                                <Form.Label column="" htmlFor="name">Organization Name</Form.Label>
                                 <Form.Control.Feedback type="invalid">
                                     {errors.name && errors.name[0]}
                                 </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label column="" htmlFor="organizationId">Organization ID</Form.Label>
+                            </FormFloating>
+                            <FormFloating className="mb-3">
                                 <Form.Control
                                     type="text"
                                     name="organizationId"
@@ -142,13 +147,25 @@ function OrganizationPage() {
                                     onChange={handleChange}
                                     isInvalid={!!errors.organization_id}
                                     required
+                                    placeholder="Organization ID"
                                 />
+                                <Form.Label column="" htmlFor="organizationId">Organization ID</Form.Label>
                                 <Form.Control.Feedback type="invalid">
                                     {errors.organization_id && errors.organization_id[0]}
                                 </Form.Control.Feedback>
-                            </Form.Group>
-                            <Button variant="primary" type="submit" disabled={formLoading}>
-                                {formLoading ? "Saving..." : "Update Organization"}
+                            </FormFloating>
+                            <Button variant="primary" size={"lg"} type="submit" disabled={formLoading}>
+                                {formLoading ? "Saving..." : "Submit"}
+                            </Button>
+
+                            <Button
+                                variant="outline-secondary"
+                                className="ms-2"
+                                size={"lg"}
+                                onClick={() => fetchOrganization()}
+                                disabled={formLoading}
+                            >
+                                Cancel
                             </Button>
                         </Form>
                     )}

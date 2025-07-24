@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../api/axios";
 
-import { Container, Card, Row, Col, Form, Button, Spinner, Alert } from "react-bootstrap";
+import {
+    Container,
+    Card,
+    Row,
+    Col,
+    Form,
+    Button,
+    Spinner,
+    Alert,
+    FormFloating
+} from "react-bootstrap";
 
 import Swal from "sweetalert2";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
@@ -130,11 +140,9 @@ function ZohoConfigPage() {
 
     return (
         <Container style={{ marginTop: "80px" }}>
-            <Card>
-                <Card.Header as="h5">
-                    Zoho Configuration
-                </Card.Header>
+            <Card className="shadow-sm">
                 <Card.Body>
+                    <Card.Title as="h4" className="mb-4 fw-bold">Zoho Configuration</Card.Title>
                     {loading ? (
                         <div className="text-center my-5">
                             <Spinner animation="border" role="status">
@@ -143,15 +151,14 @@ function ZohoConfigPage() {
                         </div>
                     ) : (
                         <Form onSubmit={handleSubmit} noValidate>
-                            <Alert variant="info">
+                            <Alert variant="secondary">
                                 <strong>Organization Name:</strong> {zohoConfig.organizationName || "N/A"}<br />
                                 <strong>Organization ID:</strong> {zohoConfig.organizationId || "N/A"}
                             </Alert>
 
                             <Row className="mb-3">
-                                <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label htmlFor="code" column="">Code</Form.Label>
+                                <Col md={12}>
+                                    <FormFloating className="mb-3">
                                         <Form.Control
                                             type="text"
                                             name="code"
@@ -159,16 +166,17 @@ function ZohoConfigPage() {
                                             onChange={handleChange}
                                             isInvalid={!!errors.code}
                                             required
+                                            placeholder="Code"
                                         />
+                                        <Form.Label htmlFor="code" column="">Code</Form.Label>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.code && errors.code[0]}
                                         </Form.Control.Feedback>
-                                    </Form.Group>
+                                    </FormFloating>
                                 </Col>
 
                                 <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label htmlFor="clientId" column="">Client ID</Form.Label>
+                                    <FormFloating className="mb-3">
                                         <Form.Control
                                             type="text"
                                             name="clientId"
@@ -176,16 +184,17 @@ function ZohoConfigPage() {
                                             onChange={handleChange}
                                             isInvalid={!!errors.client_id}
                                             required
+                                            placeholder="Client ID"
                                         />
+                                        <Form.Label htmlFor="clientId" column="">Client ID</Form.Label>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.client_id && errors.client_id[0]}
                                         </Form.Control.Feedback>
-                                    </Form.Group>
+                                    </FormFloating>
                                 </Col>
 
                                 <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label htmlFor="clientSecret" column="">Client Secret</Form.Label>
+                                    <FormFloating className="mb-3">
                                         <Form.Control
                                             type="password"
                                             name="clientSecret"
@@ -193,16 +202,17 @@ function ZohoConfigPage() {
                                             onChange={handleChange}
                                             isInvalid={!!errors.client_secret}
                                             required
+                                            placeholder="Client Secret"
                                         />
+                                        <Form.Label htmlFor="clientSecret" column="">Client Secret</Form.Label>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.client_secret && errors.client_secret[0]}
                                         </Form.Control.Feedback>
-                                    </Form.Group>
+                                    </FormFloating>
                                 </Col>
 
                                 <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
+                                    <FormFloating className="mb-3">
                                         <Form.Control
                                             type="text"
                                             name="redirectUrl"
@@ -210,40 +220,44 @@ function ZohoConfigPage() {
                                             onChange={handleChange}
                                             isInvalid={!!errors.redirect_url}
                                             required
+                                            placeholder="Redirect URL"
                                         />
+                                        <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.redirect_url && errors.redirect_url[0]}
                                         </Form.Control.Feedback>
-                                    </Form.Group>
+                                    </FormFloating>
                                 </Col>
 
                                 <Col xs={12} md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label htmlFor="refreshToken" column="">Refresh Token</Form.Label>
+                                    <FormFloating className="mb-3">
                                         <Form.Control
                                             type="text"
                                             name="refreshToken"
                                             value={zohoConfig.refreshToken}
                                             onChange={handleChange}
                                             isInvalid={!!errors.refresh_token}
+                                            placeholder="Refresh Token"
                                         />
+                                        <Form.Label htmlFor="refreshToken" column="">Refresh Token</Form.Label>
                                         <Form.Control.Feedback type="invalid">
                                             {errors.refresh_token && errors.refresh_token[0]}
                                         </Form.Control.Feedback>
-                                    </Form.Group>
+                                    </FormFloating>
                                 </Col>
                             </Row>
-                            <Button variant="primary" type="submit" disabled={formLoading}>
-                                {formLoading ? "Saving..." : "Update Settings"}
+                            <Button variant="primary" type="submit" size={"lg"} disabled={formLoading}>
+                                {formLoading ? "Saving..." : "Submit"}
                             </Button>
-                            {/* reset button */}
+
                             <Button
-                                variant="secondary"
+                                variant="outline-secondary"
+                                size={"lg"}
                                 className="ms-2"
                                 onClick={() => fetchZohoConfig()}
                                 disabled={formLoading}
                             >
-                                Reset
+                                Cancel
                             </Button>
                         </Form>
                     )}

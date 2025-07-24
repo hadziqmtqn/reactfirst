@@ -25,7 +25,7 @@ function AppNavbar() {
 
     const handleLogout = async () => {
         const result = await Swal.fire({
-            title: 'Konfirmasi Logout',
+            title: 'Oops!',
             text: 'Apakah Anda yakin ingin logout?',
             icon: 'warning',
             showCancelButton: true,
@@ -41,7 +41,7 @@ function AppNavbar() {
                 });
             } catch (err) {}
             localStorage.removeItem("token");
-            Swal.fire({
+            await Swal.fire({
                 icon: 'success',
                 title: 'Berhasil Logout',
                 showConfirmButton: false,
@@ -74,7 +74,7 @@ function AppNavbar() {
                             <>
                                 <Nav.Link as={NavLink} to="/users">Users</Nav.Link>
                                 <Nav.Link as={NavLink} to="/customers">Customers</Nav.Link>
-                                <NavDropdown title="Setting" id="basic-nav-dropdown">
+                                <NavDropdown title="Settings" id="basic-nav-dropdown">
                                     <NavDropdown.Item as={NavLink} to="/organization">Organization</NavDropdown.Item>
                                     <NavDropdown.Item as={NavLink} to="/zoho-config">Zoho Config</NavDropdown.Item>
                                 </NavDropdown>
