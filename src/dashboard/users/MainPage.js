@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import UserTable from "../../components/users/UserTable";
 import UserModal from "../../components/users/Modal";
+import OrganizationSelect from "../../components/organization/OrganizationSelect";
 
 function MainPage() {
     const [users, setUsers] = useState([]);
@@ -28,6 +29,9 @@ function MainPage() {
     const [formError, setFormError] = useState({});
     const [modalLoading, setModalLoading] = useState(false);
     const [editUserId, setEditUserId] = useState(null);
+
+    // Select organization state
+    const [organizationId, setOrganizationId] = useState("");
 
     // Fetch
     const fetchUsers = async (page = 1, keyword = "") => {
@@ -208,6 +212,14 @@ function MainPage() {
                         />
                         <button type="submit" className="btn btn-primary">Search</button>
                     </form>
+
+                    <OrganizationSelect
+                        value={organizationId}
+                        onChange={(e) => setOrganizationId(e.target.value)}
+                        name="organization_id"
+                        placeholder="Pilih Organisasi"
+                        className="mb-3"
+                    />
                     <UserTable
                         users={users}
                         pagination={pagination}

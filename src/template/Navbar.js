@@ -66,6 +66,7 @@ function AppNavbar() {
                         {token && (
                             <>
                                 <Nav.Link as={NavLink} to="/users">Users</Nav.Link>
+                                <Nav.Link as={NavLink} to="/customers">Customers</Nav.Link>
                                 <Nav.Link as={NavLink} to="/organization">Organization</Nav.Link>
                                 <Nav.Link as={NavLink} to="/zoho-config">Zoho Config</Nav.Link>
                             </>

@@ -10,6 +10,7 @@ import UserPage from "./dashboard/users/MainPage";
 import LoginPage from "./auth/Login";
 import OrganizationPage from "./dashboard/organization/Page";
 import ZohoConfigPage from "./dashboard/zoho-config/Page";
+import CustomerTablePage from './dashboard/customers/Page';
 
 // Layout dengan Navbar
 function LayoutWithNavbar() {
@@ -37,6 +38,12 @@ function App() {
                         <Route path="/users" element={
                             <ProtectedRoute>
                                 <UserPage />
+                            </ProtectedRoute>
+                        }/>
+
+                        <Route path="/customers" element={
+                            <ProtectedRoute>
+                                <CustomerTablePage />
                             </ProtectedRoute>
                         }/>
 
