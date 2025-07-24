@@ -7,8 +7,13 @@ import Swal from 'sweetalert2';
 import UserTable from "../../components/users/UserTable";
 import UserModal from "../../components/users/Modal";
 import OrganizationSelect from "../../components/organization/OrganizationSelect";
+import { useAppInfo } from "../../context/AppInfoContext";
+import { usePageTitle } from "../../components/hooks/usePageTitle";
 
 function MainPage() {
+    const { appName } = useAppInfo();
+    usePageTitle(`Users | ${appName}`);
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");

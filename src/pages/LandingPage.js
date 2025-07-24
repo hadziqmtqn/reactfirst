@@ -1,8 +1,13 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
+import { usePageTitle } from "../components/hooks/usePageTitle";
+import { useAppInfo } from "../context/AppInfoContext";
 
 function LandingPage() {
+    const { appName } = useAppInfo();
+    usePageTitle(`Landing Page | ${appName}`);
+
     return (
         <Container style={{marginTop: '80px'}}>
             <Card>

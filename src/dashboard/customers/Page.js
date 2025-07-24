@@ -10,8 +10,13 @@ import Form from 'react-bootstrap/Form';
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import axios from '../../api/axios';
 import Button from "react-bootstrap/Button";
+import { useAppInfo } from "../../context/AppInfoContext";
+import { usePageTitle } from "../../components/hooks/usePageTitle";
 
 function CustomerTablePage() {
+    const { appName } = useAppInfo();
+    usePageTitle(`Customers | ${appName}`);
+
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [organizationId, setOrganizationId] = useState('');
@@ -108,13 +113,13 @@ function CustomerTablePage() {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={5} className="text-center">
+                                        <td colSpan={6} className="text-center">
                                             <Spinner animation="border" variant="primary" />
                                         </td>
                                     </tr>
                                 ) : customers.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className="text-center">Tidak ada data customer.</td>
+                                        <td colSpan={6} className="text-center">Tidak ada data customer.</td>
                                     </tr>
                                 ) : (
                                     customers.map((c, i) => (
@@ -125,7 +130,9 @@ function CustomerTablePage() {
                                             <td>{c.company_name}</td>
                                             <td>{c.website}</td>
                                             <td>
-                                                <Button variant="link">Edit</Button>
+                                                <Button as="a" variant="primary" className="btn-sm">
+                                                    <i className="bi bi-eye"></i> Detail
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))

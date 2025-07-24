@@ -6,8 +6,13 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Swal from "sweetalert2";
+import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 
 function OrganizationPage() {
+    const { appName } = useAppInfo();
+    usePageTitle(`Organization Settings | ${appName}`);
+
     const [organization, setOrganization] = useState({
         name: "",
         organizationId: ""

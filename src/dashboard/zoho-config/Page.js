@@ -9,8 +9,13 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import Swal from "sweetalert2";
+import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 
 function ZohoConfigPage() {
+    const { appName } = useAppInfo();
+    usePageTitle(`Zoho Configuration | ${appName}`);
+
     const [zohoConfig, setZohoConfig] = useState({
         id: "",
         organizationName: "",

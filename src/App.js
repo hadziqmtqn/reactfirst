@@ -4,6 +4,7 @@ import Navbar from "./template/Navbar";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
 import { AppInfoProvider } from "./context/AppInfoContext";
+import AppInfoUpdater from "./components/AppMetaUpdater";
 import NotFound from './pages/NotFound';
 
 import UserPage from "./dashboard/users/MainPage";
@@ -30,6 +31,7 @@ function LayoutNoNavbar() {
 function App() {
     return (
         <AppInfoProvider>
+            <AppInfoUpdater />
             <Router>
                 <Routes>
                     <Route element={<LayoutWithNavbar />}>
