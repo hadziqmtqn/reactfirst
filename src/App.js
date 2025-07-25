@@ -37,6 +37,7 @@ function App() {
             <AuthMeProvider>
                 <Router>
                     <Routes>
+                        {/* Routes dengan Navbar */}
                         <Route element={<LayoutWithNavbar />}>
                             <Route path="/" element={<LandingPage />} />
 
@@ -71,10 +72,12 @@ function App() {
                             }/>
                         </Route>
 
+                        {/* Routes tanpa Navbar */}
                         <Route element={<LayoutNoNavbar />}>
                             <Route path="/login" element={<LoginPage />} />
                         </Route>
 
+                        {/* Not Found */}
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </Router>

@@ -204,14 +204,14 @@ function Page() {
 
     return (
         <Container className="container" style={{marginTop: '80px'}}>
-            <Card>
-                <Card.Header as="h5" className="d-flex justify-content-between align-items-center">
-                    <span className="text-primary">User Management</span>
-                    <Button variant="secondary" onClick={handleShowModal}>
-                        <i className="bi bi-plus-circle me-2"></i>Add User
-                    </Button>
-                </Card.Header>
+            <Card className="shadow-sm">
                 <Card.Body>
+                    <Card.Title as="h4" className="d-flex justify-content-between align-items-center mb-4 fw-bold">
+                        <span>User Management</span>
+                        <Button variant="secondary" onClick={handleShowModal}>
+                            <i className="bi bi-plus-circle me-2"></i>Add User
+                        </Button>
+                    </Card.Title>
                     <form className="mb-3 d-flex" onSubmit={handleSearch}>
                         <InputGroup className="mb-3">
                             <Form.Control

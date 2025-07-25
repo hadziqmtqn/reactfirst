@@ -15,6 +15,9 @@ export function AuthMeProvider({ children }) {
     });
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
         async function fetchAuthMe() {
             try {
                 const res = await axios.get("/auth/me");

@@ -1,16 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
+import { Container, Card, Form, Button, Spinner, FormFloating } from "react-bootstrap";
 import axios from "axios";
+import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2';
 import { useAppInfo } from "../context/AppInfoContext";
 
 function Login() {
     const { appName, appLogo } = useAppInfo();
-
-    // State untuk menyimpan input email, password, error, dan loading
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState({});
+    const [form, setForm] = useState({ email: "", password: "" });
+    const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     const API_URL = process.env.REACT_APP_API_URL;
@@ -18,52 +16,59 @@ function Login() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
-            navigate('/');
-        }
+        if (token) navigate('/');
     }, [navigate]);
+
+    const handleChange = e => {
+        const { name, value } = e.target;
+        setForm(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        // Clear error for this field
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: undefined }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError({});
+        setErrors({});
         setLoading(true);
 
         try {
-            const response = await axios.post(
-                `${API_URL}/login`,
-                { email, password }
-            );
-            localStorage.setItem('token', response.data.data);
+            const res = await axios.post(`${API_URL}/login`, {
+                email: form.email,
+                password: form.password
+            });
+
+            localStorage.setItem('token', res.data.data);
             navigate('/');
         } catch (err) {
-            if (err.response && err.response.status === 422) {
-                setError(err.response.data.message || {});
+            if (err.response && err.response.status === 422 && err.response.data.message) {
+                setErrors(err.response.data.message || {});
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Login Gagal',
+                await Swal.fire({
+                    icon: "error",
+                    title: "Login Gagal",
                     text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
                 });
-                setError({});
+                setErrors({});
             }
         }
         setLoading(false);
     };
 
-    return(
-        <main
-            className="container"
-            style={{
-                minHeight: '100vh',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                maxWidth: '400px'
-            }}
-        >
-            <div className="card shadow w-100">
-                <div className="card-body">
-                    <h3 className="mb-4 text-center">
+    return (
+        <Container style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            maxWidth: "400px"
+        }}>
+            <Card className="shadow w-100">
+                <Card.Body>
+                    <div className="text-center mb-4">
                         <a href="/" className="text-decoration-none">
                             {appLogo && (
                                 <img
@@ -73,59 +78,57 @@ function Login() {
                                     className="mb-2 me-2"
                                 />
                             )}
-                            {appName || "MyApp"}
+                            <span className="fw-bold fs-4">{appName || "MyApp"}</span>
                         </a>
-                    </h3>
-                    <p className="text-center">Silakan masuk untuk melanjutkan</p>
-                    <form onSubmit={handleSubmit} noValidate>
-                        <div className="mb-3">
-                            <label htmlFor="email" className="form-label">Email address</label>
-                            <input
+                    </div>
+                    <p className="text-center mb-4">Silakan masuk untuk melanjutkan</p>
+                    <Form onSubmit={handleSubmit} noValidate>
+                        <FormFloating className="mb-3">
+                            <Form.Control
                                 type="email"
-                                className={`form-control ${error.email ? 'is-invalid' : ''}`}
-                                id="email"
-                                required
-                                value={email}
-                                onChange={e => {
-                                    setEmail(e.target.value);
-                                    if (error.email) setError(prev => ({ ...prev, email: undefined }));
-                                }}
                                 name="email"
-                            />
-                            {error.email && (
-                                <div className="invalid-feedback">
-                                    {error.email[0]}
-                                </div>
-                            )}
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="password" className="form-label">Password</label>
-                            <input
-                                type="password"
-                                className={`form-control ${error.password ? 'is-invalid' : ''}`}
-                                id="password"
+                                id="email"
+                                placeholder="Email address"
+                                value={form.email}
+                                onChange={handleChange}
+                                isInvalid={!!errors.email}
                                 required
-                                value={password}
-                                onChange={e => {
-                                    setPassword(e.target.value);
-                                    if (error.password) setError(prev => ({ ...prev, password: undefined }));
-                                }}
-                                name="password"
+                                autoFocus
                             />
-                            {error.password && (
-                                <div className="invalid-feedback">
-                                    {error.password[0]}
-                                </div>
-                            )}
-                        </div>
-                        {/* error.general dihilangkan karena sekarang pakai Swal */}
-                        <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                            {loading ? "Loading..." : "Login"}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </main>
+                            <Form.Label column="" htmlFor="email">Email address</Form.Label>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.email && errors.email[0]}
+                            </Form.Control.Feedback>
+                        </FormFloating>
+                        <FormFloating className="mb-3">
+                            <Form.Control
+                                type="password"
+                                name="password"
+                                id="password"
+                                placeholder="Password"
+                                value={form.password}
+                                onChange={handleChange}
+                                isInvalid={!!errors.password}
+                                required
+                            />
+                            <Form.Label column="" htmlFor="password">Password</Form.Label>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password && errors.password[0]}
+                            </Form.Control.Feedback>
+                        </FormFloating>
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="w-100"
+                            disabled={loading}
+                            size="lg"
+                        >
+                            {loading ? <Spinner animation="border" size="sm" /> : "Login"}
+                        </Button>
+                    </Form>
+                </Card.Body>
+            </Card>
+        </Container>
     );
 }
 
