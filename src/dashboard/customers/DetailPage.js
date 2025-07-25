@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "../../api/axios";
 import {
     Container,
@@ -9,11 +9,11 @@ import {
     Col,
     Form,
     Button,
-    FormFloating
+    FormFloating,
+    Breadcrumb
 } from "react-bootstrap";
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
-import SimpleBreadcrumb from "../../components/SimpleBreadcrumb";
 import ToastContainer from "../../components/ToastContainer"; // pastikan importnya sesuai
 
 export default function CustomerDetailPage() {
@@ -139,13 +139,13 @@ export default function CustomerDetailPage() {
                 </Container>
             ) : (
                 <Container className="container" style={{ marginTop: '80px' }}>
-                    <SimpleBreadcrumb
-                        items={[
-                            { label: "Home", href: "/" },
-                            { label: "Customers", href: `/customers` },
-                            { label: customer.contact_name || "Detail", active: true }
-                        ]}
-                    />
+
+                    <Breadcrumb>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>Home</Breadcrumb.Item>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/customers" }}>Customers</Breadcrumb.Item>
+                        <Breadcrumb.Item active>Detail</Breadcrumb.Item>
+                    </Breadcrumb>
+
                     <Row>
                         <Col xl={4} lg={5} sm={12} className="mb-4">
                             <Card className="shadow-none">
