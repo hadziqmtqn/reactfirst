@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-
 import {
     Container,
     Navbar,
@@ -11,7 +10,6 @@ import {
     Dropdown,
     NavDropdown
 } from "react-bootstrap";
-
 import { useAppInfo } from "../context/AppInfoContext";
 import { useAuthMe } from "../context/AuthMeContext";
 
@@ -51,11 +49,14 @@ function AppNavbar() {
         }
     };
 
+    // Helper untuk mengecek src valid/tidak kosong/null
+    const hasValidSrc = val => !!val && val.trim() !== "";
+
     return (
         <Navbar bg="dark" variant="dark" expand="md" fixed="top">
             <Container>
                 <Navbar.Brand as={NavLink} to="/">
-                    {appLogo && (
+                    {hasValidSrc(appLogo) && (
                         <img
                             src={appLogo}
                             width="30"
@@ -85,13 +86,18 @@ function AppNavbar() {
                         {token ? (
                             <Dropdown align="end">
                                 <Dropdown.Toggle as="a" className="d-block link-light text-decoration-none" style={{ cursor: "pointer", padding: 0 }}>
-                                    <img
-                                        src={authMe.avatar}
-                                        alt="Avatar"
-                                        width="32"
-                                        height="32"
-                                        className="rounded-circle"
-                                    />
+                                    {hasValidSrc(authMe.avatar) ? (
+                                        <img
+                                            src={authMe.avatar}
+                                            alt="Avatar"
+                                            width="32"
+                                            height="32"
+                                            className="rounded-circle"
+                                        />
+                                    ) : (
+                                        // Optional: fallback avatar, e.g., icon or initials
+                                        <span className="rounded-circle bg-secondary d-inline-block" style={{ width: 32, height: 32 }} />
+                                    )}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className="text-small">
                                     <Dropdown.Item as={NavLink} to="/new-project">New project...</Dropdown.Item>

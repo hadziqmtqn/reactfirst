@@ -148,7 +148,7 @@ export default function CustomerDetailPage() {
                         <Col xl={4} lg={5} sm={12} className="mb-4">
                             <Card className="shadow-none">
                                 <Card.Body>
-                                    <Card.Title as="h5" className="mb-3 fw-bold text-center">
+                                    <Card.Title className="mb-3 fw-bold text-center">
                                         <img
                                             src={`https://ui-avatars.com/api/?name=${encodeURIComponent(customer.contact_name)}&background=EBF4FF&color=7F9CF5&size=96`}
                                             alt={customer.contact_name}
