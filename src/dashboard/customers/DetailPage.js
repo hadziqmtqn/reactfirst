@@ -21,7 +21,8 @@ export default function CustomerDetailPage() {
     const { appName } = useAppInfo();
     usePageTitle(`Customer Detail | ${appName}`);
 
-    const [customer, setCustomer] = useState({
+    const [customer, setCustomer] = useState(null); // untuk display kiri
+    const [formCustomer, setFormCustomer] = useState({
         contact_name: "",
         contact_id: "",
         contact_number: "",
@@ -54,11 +55,32 @@ export default function CustomerDetailPage() {
             const res = await axios.get(`/customers/${organization}/${customerId}`);
             if (res.data?.data) {
                 setCustomer(res.data.data);
+                setFormCustomer(res.data.data); // sinkronkan form dengan data asli
             } else {
                 setCustomer(null);
+                setFormCustomer({
+                    contact_name: "",
+                    contact_id: "",
+                    contact_number: "",
+                    company_name: "",
+                    email: "",
+                    mobile: "",
+                    website: "",
+                    notes: ""
+                });
             }
         } catch (err) {
             setCustomer(null);
+            setFormCustomer({
+                contact_name: "",
+                contact_id: "",
+                contact_number: "",
+                company_name: "",
+                email: "",
+                mobile: "",
+                website: "",
+                notes: ""
+            });
             showToast(
                 err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.",
                 "danger"
@@ -75,8 +97,8 @@ export default function CustomerDetailPage() {
     // Handle input change & clear error for field
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCustomer({
-            ...customer,
+        setFormCustomer({
+            ...formCustomer,
             [name]: value
         });
 
@@ -93,14 +115,15 @@ export default function CustomerDetailPage() {
         setErrors({});
         try {
             const res = await axios.put(`/customers/${organization}/${customerId}`, {
-                contact_name: customer.contact_name,
-                company_name: customer.company_name,
-                website: customer.website,
-                notes: customer.notes
+                contact_name: formCustomer.contact_name,
+                company_name: formCustomer.company_name,
+                website: formCustomer.website,
+                notes: formCustomer.notes
             });
             if (res.data.success) {
                 showToast("Data customer berhasil diupdate.", "primary");
-                setCustomer(res.data.data);
+                setCustomer(res.data.data); // update data untuk display
+                setFormCustomer(res.data.data); // update data untuk form
                 // Ambil ulang tanpa spinner
                 await fetchCustomer(false);
             } else {
@@ -115,6 +138,14 @@ export default function CustomerDetailPage() {
             }
         }
         setFormLoading(false);
+    };
+
+    // Cancel: reset formCustomer ke customer
+    const handleCancel = () => {
+        if (customer) {
+            setFormCustomer(customer);
+            setErrors({});
+        }
     };
 
     // Render Toast di luar spinner/loading branch
@@ -190,7 +221,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="contact_name"
-                                                value={customer.contact_name}
+                                                value={formCustomer.contact_name}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.contact_name}
                                                 placeholder="Contact Name"
@@ -205,7 +236,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="contact_id"
-                                                value={customer.contact_id}
+                                                value={formCustomer.contact_id}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.contact_id}
                                                 placeholder="Contact ID"
@@ -220,7 +251,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="contact_number"
-                                                value={customer.contact_number}
+                                                value={formCustomer.contact_number}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.contact_number}
                                                 placeholder="Contact Number"
@@ -235,7 +266,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="company_name"
-                                                value={customer.company_name}
+                                                value={formCustomer.company_name}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.company_name}
                                                 placeholder="Company Name"
@@ -250,7 +281,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="email"
                                                 name="email"
-                                                value={customer.email}
+                                                value={formCustomer.email}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.email}
                                                 placeholder="Email"
@@ -265,7 +296,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="mobile"
-                                                value={customer.mobile}
+                                                value={formCustomer.mobile}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.mobile}
                                                 placeholder="Mobile"
@@ -280,7 +311,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 type="text"
                                                 name="website"
-                                                value={customer.website}
+                                                value={formCustomer.website}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.website}
                                                 placeholder="Website"
@@ -294,7 +325,7 @@ export default function CustomerDetailPage() {
                                             <Form.Control
                                                 as="textarea"
                                                 name="notes"
-                                                value={customer.notes}
+                                                value={formCustomer.notes}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.notes}
                                                 placeholder="Notes"
@@ -312,7 +343,7 @@ export default function CustomerDetailPage() {
                                             variant="outline-secondary"
                                             className="ms-2"
                                             size="lg"
-                                            onClick={() => fetchCustomer(false)}
+                                            onClick={handleCancel}
                                             disabled={formLoading}
                                         >
                                             Cancel
