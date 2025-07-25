@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../../api/axios';
 import { Link } from "react-router-dom";
-
 import {
     Card,
     Row,
@@ -18,6 +17,7 @@ import {
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
+import CustomerCreateModal from '../../components/customers/CustomerCreateModal'; // <-- Tambahkan ini
 
 function CustomerTablePage() {
     const { appName } = useAppInfo();
@@ -31,6 +31,7 @@ function CustomerTablePage() {
     const [organizationSlug, setOrganizationSlug] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showCreateModal, setShowCreateModal] = useState(false); // <-- State modal
 
     // Ambil data organization saat komponen mount
     useEffect(() => {
@@ -52,7 +53,7 @@ function CustomerTablePage() {
     }, [search]);
 
     // Fetch customers data when organizationId or search changes
-    useEffect(() => {
+    const fetchCustomers = () => {
         if (!organizationId) {
             setCustomers([]);
             setOrganizationSlug([]);
@@ -66,23 +67,43 @@ function CustomerTablePage() {
                 organization_id: organizationId
             }
         })
-        .then(res => {
-            const data = res.data?.data || {};
-            setCustomers(data.custumers || []);
-            setOrganizationSlug(data.organizationSlug || '');
-            setLoading(false);
-        })
-        .catch(() => {
-            setError('Gagal mengambil data customer.');
-            setLoading(false);
-        });
+            .then(res => {
+                const data = res.data?.data || {};
+                setCustomers(data.custumers || []);
+                setOrganizationSlug(data.organizationSlug || '');
+                setLoading(false);
+            })
+            .catch(() => {
+                setError('Gagal mengambil data customer.');
+                setLoading(false);
+            });
+    };
+
+    useEffect(() => {
+        fetchCustomers();
+        // eslint-disable-next-line
     }, [debouncedSearch, organizationId]);
+
+    // Handler ketika customer baru berhasil dibuat
+    const handleCreated = () => {
+        fetchCustomers(); // Refresh data setelah create
+    };
 
     return (
         <Container className="container" style={{ marginTop: '80px' }}>
             <Card className="shadow-sm">
                 <Card.Body>
-                    <Card.Title as="h4" className="mb-4 fw-bold">Customer List</Card.Title>
+                    <Card.Title className="d-flex justify-content-between align-items-center mb-4">
+                        <span className="fw-bold">Customer List</span>
+                        <Button
+                            variant="primary"
+                            className="d-flex align-items-center"
+                            onClick={() => setShowCreateModal(true)} // <-- Buka modal
+                        >
+                            <i className="bi bi-plus-circle me-2"></i>
+                            Tambah Customer
+                        </Button>
+                    </Card.Title>
                     <Row className="mb-3">
                         <Col md={6}>
                             <OrganizationSelect
@@ -112,53 +133,60 @@ function CustomerTablePage() {
                     )}
                     {error && <Alert variant="danger">{error}</Alert>}
                     {organizationId && (
-                        <Table striped bordered hover responsive="md">
+                        <Table striped bordered hover responsive="md" className="text-nowrap">
                             <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Customer Name</th>
-                                    <th>Contact Number</th>
-                                    <th>Company Name</th>
-                                    <th>Website</th>
-                                    <th>Action</th>
-                                </tr>
+                            <tr>
+                                <th>No</th>
+                                <th>Customer Name</th>
+                                <th>Contact Number</th>
+                                <th>Company Name</th>
+                                <th>Website</th>
+                                <th>Action</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-center">
-                                            <Spinner animation="border" variant="primary" />
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center">
+                                        <Spinner animation="border" variant="primary" />
+                                    </td>
+                                </tr>
+                            ) : customers.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center">Tidak ada data customer.</td>
+                                </tr>
+                            ) : (
+                                customers.map((c, i) => (
+                                    <tr key={c.contact_id}>
+                                        <td>{i + 1}</td>
+                                        <td>{c.customer_name}</td>
+                                        <td>{c.contact_number}</td>
+                                        <td>{c.company_name}</td>
+                                        <td>{c.website}</td>
+                                        <td>
+                                            <Button
+                                                as={Link}
+                                                to={`/customers/${organizationSlug}/${c.contact_id}`}
+                                                variant="primary"
+                                            >
+                                                <i className="bi bi-eye"></i> Detail
+                                            </Button>
                                         </td>
                                     </tr>
-                                ) : customers.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={6} className="text-center">Tidak ada data customer.</td>
-                                    </tr>
-                                ) : (
-                                    customers.map((c, i) => (
-                                        <tr key={c.contact_id}>
-                                            <td>{i + 1}</td>
-                                            <td>{c.customer_name}</td>
-                                            <td>{c.contact_number}</td>
-                                            <td>{c.company_name}</td>
-                                            <td>{c.website}</td>
-                                            <td>
-                                                <Button
-                                                    as={Link}
-                                                    to={`/customers/${organizationSlug}/${c.contact_id}`}
-                                                    variant="primary"
-                                                >
-                                                    <i className="bi bi-eye"></i> Detail
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
+                                ))
+                            )}
                             </tbody>
                         </Table>
                     )}
                 </Card.Body>
             </Card>
+            {/* MODAL CREATE CUSTOMER */}
+            <CustomerCreateModal
+                show={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                organizations={organizations}
+                onCreated={handleCreated}
+            />
         </Container>
     );
 }

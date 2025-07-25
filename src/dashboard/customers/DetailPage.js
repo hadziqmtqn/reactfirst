@@ -14,7 +14,7 @@ import {
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
 import SimpleBreadcrumb from "../../components/SimpleBreadcrumb";
-import ToastContainerSederhana from "../../components/ToastContainer"; // pastikan importnya sesuai
+import ToastContainer from "../../components/ToastContainer"; // pastikan importnya sesuai
 
 export default function CustomerDetailPage() {
     const { organization, customerId } = useParams();
@@ -28,7 +28,8 @@ export default function CustomerDetailPage() {
         company_name: "",
         email: "",
         mobile: "",
-        website: ""
+        website: "",
+        notes: ""
     });
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
@@ -94,7 +95,8 @@ export default function CustomerDetailPage() {
             const res = await axios.put(`/customers/${organization}/${customerId}`, {
                 contact_name: customer.contact_name,
                 company_name: customer.company_name,
-                website: customer.website
+                website: customer.website,
+                notes: customer.notes
             });
             if (res.data.success) {
                 showToast("Data customer berhasil diupdate.", "primary");
@@ -118,7 +120,7 @@ export default function CustomerDetailPage() {
     // Render Toast di luar spinner/loading branch
     return (
         <>
-            <ToastContainerSederhana
+            <ToastContainer
                 show={toastShow}
                 onClose={() => setToastShow(false)}
                 message={toastMessage}
@@ -173,6 +175,8 @@ export default function CustomerDetailPage() {
                                         <dt className="mb-2">{customer.mobile || '-'}</dt>
                                         <dd className="mb-0 small">Website:</dd>
                                         <dt className="mb-2">{customer.website || '-'}</dt>
+                                        <dd className="mb-0 small">Notes:</dd>
+                                        <dt className="mb-2">{customer.notes || '-'}</dt>
                                     </dl>
                                 </Card.Body>
                             </Card>
@@ -284,6 +288,21 @@ export default function CustomerDetailPage() {
                                             <Form.Label column="" htmlFor="website">Website</Form.Label>
                                             <Form.Control.Feedback type="invalid">
                                                 {errors.website && errors.website[0]}
+                                            </Form.Control.Feedback>
+                                        </FormFloating>
+                                        <FormFloating className="mb-3">
+                                            <Form.Control
+                                                as="textarea"
+                                                name="notes"
+                                                value={customer.notes}
+                                                onChange={handleChange}
+                                                isInvalid={!!errors.notes}
+                                                placeholder="Notes"
+                                                style={{ minHeight: "100px" }}
+                                            />
+                                            <Form.Label column="" htmlFor="notes">Notes</Form.Label>
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.notes && errors.notes[0]}
                                             </Form.Control.Feedback>
                                         </FormFloating>
                                         <Button variant="primary" size="lg" type="submit" disabled={formLoading}>
