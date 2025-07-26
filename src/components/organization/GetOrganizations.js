@@ -71,7 +71,7 @@ const OrganizationList = () => {
                                     </Button>
                                 </Col>
                                 <Col lg={4} md={4}>
-                                    <Button as="a" variant="outline-secondary" href={`/organization/${org.slug}/edit`} className="w-100">
+                                    <Button variant="outline-secondary" className="w-100">
                                         Edit
                                     </Button>
                                 </Col>

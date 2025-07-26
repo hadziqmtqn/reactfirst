@@ -1,15 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import {
+    Spinner
+} from "react-bootstrap";
 
 function ProtectedRoute({ children }) {
-    const token = localStorage.getItem('token');
+    const [tokenChecked, setTokenChecked] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    // Jika token tidak ada, redirect ke halaman login
-    if (!token) {
-        return <Navigate to="/login" replace />;
+    useEffect(() => {
+        // Simulasi cek token (bisa juga cek ke server jika perlu)
+        const token = localStorage.getItem('token');
+        setIsAuthenticated(!!token);
+        setTokenChecked(true);
+    }, []);
+
+    if (!tokenChecked) {
+        return <div className="text-center gy-4">
+            <Spinner variant="primary" animation="border" role="status" />
+        </div>
     }
 
-    // Jika token ada, tampilkan komponen anak
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
+    }
+
     return children;
 }
 

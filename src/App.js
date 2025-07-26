@@ -1,8 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./template/Navbar";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import LandingPage from "./pages/LandingPage";
+import DashboardPage from "./pages/DashboardPage";
 import { AppInfoProvider } from "./context/AppInfoContext";
 import AppInfoUpdater from "./components/AppMetaUpdater";
 import NotFound from './pages/NotFound';
@@ -14,75 +14,63 @@ import ZohoConfigPage from "./dashboard/zoho-config/Page";
 import CustomerTablePage from './dashboard/customers/Page';
 import CustomerDetailPage from "./dashboard/customers/DetailPage";
 import { AuthMeProvider } from "./context/AuthMeContext";
-
-// Layout dengan Navbar
-function LayoutWithNavbar() {
-    return (
-        <>
-            <Navbar />
-            <Outlet />
-        </>
-    );
-}
-
-// Layout tanpa Navbar
-function LayoutNoNavbar() {
-    return <Outlet />;
-}
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
     return (
-        <AppInfoProvider>
-            <AppInfoUpdater />
-            <AuthMeProvider>
-                <Router>
-                    <Routes>
-                        {/* Routes dengan Navbar */}
-                        <Route element={<LayoutWithNavbar />}>
-                            <Route path="/" element={<LandingPage />} />
+        <AuthProvider>
+            <AppInfoProvider>
+                <AppInfoUpdater />
+                <AuthMeProvider>
+                    <Router>
+                        <Routes>
+                            <Route element={<Navbar />}>
+                                <Route path="/dashboard" element={
+                                    <ProtectedRoute>
+                                        <DashboardPage />
+                                    </ProtectedRoute>
+                                } />
 
-                            <Route path="/users" element={
-                                <ProtectedRoute>
-                                    <UserPage />
-                                </ProtectedRoute>
-                            }/>
+                                <Route path="/users" element={
+                                    <ProtectedRoute>
+                                        <UserPage />
+                                    </ProtectedRoute>
+                                }/>
 
-                            <Route path="/customers" element={
-                                <ProtectedRoute>
-                                    <CustomerTablePage />
-                                </ProtectedRoute>
-                            }/>
+                                <Route path="/customers" element={
+                                    <ProtectedRoute>
+                                        <CustomerTablePage />
+                                    </ProtectedRoute>
+                                }/>
 
-                            <Route path="/customers/:organization/:customerId" element={
-                                <ProtectedRoute>
-                                    <CustomerDetailPage />
-                                </ProtectedRoute>
-                            }/>
+                                <Route path="/customers/:organization/:customerId" element={
+                                    <ProtectedRoute>
+                                        <CustomerDetailPage />
+                                    </ProtectedRoute>
+                                }/>
 
-                            <Route path="/organization" element={
-                                <ProtectedRoute>
-                                    <OrganizationPage />
-                                </ProtectedRoute>
-                            }/>
+                                <Route path="/organization" element={
+                                    <ProtectedRoute>
+                                        <OrganizationPage />
+                                    </ProtectedRoute>
+                                }/>
 
-                            <Route path="/zoho-config" element={
-                                <ProtectedRoute>
-                                    <ZohoConfigPage />
-                                </ProtectedRoute>
-                            }/>
-                        </Route>
+                                <Route path="/zoho-config" element={
+                                    <ProtectedRoute>
+                                        <ZohoConfigPage />
+                                    </ProtectedRoute>
+                                }/>
 
-                        {/* Routes tanpa Navbar */}
-                        <Route element={<LayoutNoNavbar />}>
-                            <Route path="/login" element={<LoginPage />} />
-                        </Route>
+                                <Route path="/" element={<LoginPage />} />
+                            </Route>
 
-                        {/* Not Found */}
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </Router>
-            </AuthMeProvider>
-        </AppInfoProvider>
+                            {/* Not Found */}
+                            <Route path="*" element={<NotFound />} />
+                        </Routes>
+                    </Router>
+                </AuthMeProvider>
+            </AppInfoProvider>
+        </AuthProvider>
     );
 }
 

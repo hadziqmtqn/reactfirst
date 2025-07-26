@@ -25,8 +25,8 @@ axiosInstance.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             // Hapus token
             localStorage.removeItem("token");
-            // Redirect ke login
-            window.location.href = "/login";
+            // Redirect ke halaman utama
+            window.location.href = "/";
         }
 
         return Promise.reject(error);

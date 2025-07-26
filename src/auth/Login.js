@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, Form, Button, Spinner, FormFloating } from "react-bootstrap";
 import axios from "axios";
-import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+//import Swal from "sweetalert2";
+import { useNavigate, useLocation } from "react-router-dom"; // tambahkan useLocation
 import { useAppInfo } from "../context/AppInfoContext";
+import ToastAlert
+    from "../components/ToastContainer";
 
 function Login() {
     const { appName, appLogo } = useAppInfo();
@@ -13,10 +15,14 @@ function Login() {
 
     const API_URL = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
+    //const location = useLocation(); // ambil location
+
+    // Ambil path asal dari location.state
+    //const from = location.state?.from?.pathname || "/";
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) navigate('/');
+        if (token) navigate('/dashboard'); // jika sudah login, redirect ke dashboard
     }, [navigate]);
 
     const handleChange = e => {
@@ -42,15 +48,19 @@ function Login() {
             });
 
             localStorage.setItem('token', res.data.data);
-            navigate('/');
+            navigate('/dashboard');
         } catch (err) {
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                await Swal.fire({
+                /*await Swal.fire({
                     icon: "error",
                     title: "Login Gagal",
                     text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
+                });*/
+                ToastAlert({
+                    variant: "error",
+                    message: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
                 });
                 setErrors({});
             }

@@ -117,6 +117,7 @@ function Page() {
         e.preventDefault();
         setModalLoading(true);
         setFormError({});
+        // TODO Create Data
         if (modalMode === 'create') {
             try {
                 await axios.post("/users/store", formData);
@@ -142,7 +143,10 @@ function Page() {
                     });
                 }
             }
-        } else if (modalMode === 'edit' && editUserId) {
+        }
+
+        // TODO Update Data
+        if (modalMode === 'edit' && editUserId) {
             try {
                 await axios.put(`/users/${editUserId}/update`, formData);
                 setModalLoading(false);
