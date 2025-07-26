@@ -5,10 +5,12 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import { AppInfoProvider } from "./context/AppInfoContext";
 import AppInfoUpdater from "./components/AppMetaUpdater";
+import ToastifyContainer
+    from "./components/ToastifyContainer";
 import NotFound from './pages/NotFound';
 
 import UserPage from "./dashboard/users/Page";
-import LoginPage from "./auth/Login";
+import LoginPage from "./components/hooks/Login";
 import OrganizationPage from "./dashboard/organization/Page";
 import ZohoConfigPage from "./dashboard/zoho-config/Page";
 import CustomerTablePage from './dashboard/customers/Page';
@@ -18,59 +20,62 @@ import { AuthProvider } from "./context/AuthContext";
 
 function App() {
     return (
-        <AuthProvider>
-            <AppInfoProvider>
-                <AppInfoUpdater />
-                <AuthMeProvider>
-                    <Router>
-                        <Routes>
-                            <Route element={<Navbar />}>
-                                <Route path="/dashboard" element={
-                                    <ProtectedRoute>
-                                        <DashboardPage />
-                                    </ProtectedRoute>
-                                } />
+        <>
+            <ToastifyContainer />
+            <AuthProvider>
+                <AppInfoProvider>
+                    <AppInfoUpdater />
+                    <AuthMeProvider>
+                        <Router>
+                            <Routes>
+                                <Route element={<Navbar />}>
+                                    <Route path="/dashboard" element={
+                                        <ProtectedRoute>
+                                            <DashboardPage />
+                                        </ProtectedRoute>
+                                    } />
 
-                                <Route path="/users" element={
-                                    <ProtectedRoute>
-                                        <UserPage />
-                                    </ProtectedRoute>
-                                }/>
+                                    <Route path="/users" element={
+                                        <ProtectedRoute>
+                                            <UserPage />
+                                        </ProtectedRoute>
+                                    }/>
 
-                                <Route path="/customers" element={
-                                    <ProtectedRoute>
-                                        <CustomerTablePage />
-                                    </ProtectedRoute>
-                                }/>
+                                    <Route path="/customers" element={
+                                        <ProtectedRoute>
+                                            <CustomerTablePage />
+                                        </ProtectedRoute>
+                                    }/>
 
-                                <Route path="/customers/:organization/:customerId" element={
-                                    <ProtectedRoute>
-                                        <CustomerDetailPage />
-                                    </ProtectedRoute>
-                                }/>
+                                    <Route path="/customers/:organization/:customerId" element={
+                                        <ProtectedRoute>
+                                            <CustomerDetailPage />
+                                        </ProtectedRoute>
+                                    }/>
 
-                                <Route path="/organization" element={
-                                    <ProtectedRoute>
-                                        <OrganizationPage />
-                                    </ProtectedRoute>
-                                }/>
+                                    <Route path="/organization" element={
+                                        <ProtectedRoute>
+                                            <OrganizationPage />
+                                        </ProtectedRoute>
+                                    }/>
 
-                                <Route path="/zoho-config" element={
-                                    <ProtectedRoute>
-                                        <ZohoConfigPage />
-                                    </ProtectedRoute>
-                                }/>
+                                    <Route path="/zoho-config" element={
+                                        <ProtectedRoute>
+                                            <ZohoConfigPage />
+                                        </ProtectedRoute>
+                                    }/>
 
-                                <Route path="/" element={<LoginPage />} />
-                            </Route>
+                                    <Route path="/" element={<LoginPage />} />
+                                </Route>
 
-                            {/* Not Found */}
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </Router>
-                </AuthMeProvider>
-            </AppInfoProvider>
-        </AuthProvider>
+                                {/* Not Found */}
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </Router>
+                    </AuthMeProvider>
+                </AppInfoProvider>
+            </AuthProvider>
+        </>
     );
 }
 

@@ -1,6 +1,4 @@
-import React, {
-    useState
-} from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import {
     Container,
@@ -12,24 +10,12 @@ import {
 import { useAppInfo } from "../context/AppInfoContext";
 import { useAuthMe } from "../context/AuthMeContext";
 import useLogout from "../components/hooks/Logout";
-import ToastAlert
-    from "../components/ToastAlert";
 
 function AppNavbar() {
     const { appName, appLogo } = useAppInfo();
     const authMe = useAuthMe();
 
-    const [showToast, setShowToast] = useState(false);
-    const [toastMsg, setToastMsg] = useState("");
-    const [toastVariant, setToastVariant] = useState("success");
-
-    const logout = useLogout({
-        onSuccess: (msg, variant) => {
-            setToastMsg(msg);
-            setToastVariant(variant);
-            setShowToast(true);
-        }
-    });
+    const logout = useLogout();
 
     // Helper untuk mengecek src valid/tidak kosong/null
     const hasValidSrc = val => !!val && val.trim() !== "";
@@ -89,12 +75,6 @@ function AppNavbar() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <ToastAlert
-                show={showToast}
-                onClose={() => setShowToast(false)}
-                message={toastMsg}
-                variant={toastVariant}
-            />
         </>
     );
 }

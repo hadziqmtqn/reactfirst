@@ -6,8 +6,9 @@ import Swal
 import axios
     from "axios";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
-export default function useLogout({ onSuccess }) {
+export default function useLogout() {
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     const { token, setToken } = useAuth();
@@ -29,11 +30,14 @@ export default function useLogout({ onSuccess }) {
                 await axios.post(`${API_URL}/logout`, {}, {
                     headers: {Authorization: `Bearer ${token}`}
                 });
+
+                toast.success("Berhasil logout");
+                setToken(null);
+                navigate("/");
             } catch (err) {
+                console.error("Logout error:", err);
+                toast.error("Gagal logout, silakan coba lagi");
             }
-            setToken(null);
-            if (onSuccess) onSuccess("Berhasil Logout", "success");
-            navigate("/");
         }
     };
 }
