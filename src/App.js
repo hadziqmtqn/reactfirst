@@ -9,7 +9,7 @@ import AppInfoUpdater from "./components/AppMetaUpdater";
 import ToastifyContainer from "./components/ToastifyContainer";
 import NotFound from './components/NotFound';
 
-import DashboardPage from "./pages/dashboard/DashboardPage";
+import Page from "./pages/dashboard/Page";
 import UserPage from "./pages/users/Page";
 import LoginPage from "./pages/auth/Login";
 import OrganizationPage from "./pages/organization/Page";
@@ -30,7 +30,7 @@ function App() {
                                 <Route element={<Navbar />}>
                                     <Route path="/dashboard" element={
                                         <ProtectedRoute>
-                                            <DashboardPage />
+                                            <Page />
                                         </ProtectedRoute>
                                     } />
 

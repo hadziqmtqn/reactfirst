@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState }
     from "react";
 
 import axios from "../api/axios";
+import { useAuth } from "./AuthContext";
 
 const AuthMeContext = createContext(undefined);
 
@@ -14,8 +15,10 @@ export function AuthMeProvider({ children }) {
         avatar: ""
     });
 
+    const { token } = useAuth();
+
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        //const token = localStorage.getItem("token");
         if (!token) return;
 
         async function fetchAuthMe() {
@@ -29,7 +32,7 @@ export function AuthMeProvider({ children }) {
             }
         }
         fetchAuthMe();
-    }, []);
+    }, [token]);
 
     return (
         <AuthMeContext.Provider value={authMe}>

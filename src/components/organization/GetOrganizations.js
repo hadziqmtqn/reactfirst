@@ -5,13 +5,16 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import axios from "../../api/axios";
-import ToastAlert
-    from "../ToastAlert";
+import { toast } from "react-toastify";
+import {
+    useNavigate
+} from "react-router-dom";
 
-const OrganizationList = () => {
+const OrganizationList = ({ onEdit, refreshKey }) => {
     const [organizations, setOrganizations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrganizations = async () => {
@@ -26,7 +29,7 @@ const OrganizationList = () => {
         };
 
         fetchOrganizations();
-    }, []);
+    }, [refreshKey]);
 
     if (loading) {
         return (
@@ -37,12 +40,7 @@ const OrganizationList = () => {
     }
 
     if (error) {
-        return <ToastAlert
-            variant="error"
-            message={error}
-            show={true}
-            onClose={() => setError(null)}
-        />;
+        return toast.error('Data organisasi gagal dimuat');
     }
 
     if (organizations.length === 0) {
@@ -52,26 +50,27 @@ const OrganizationList = () => {
     return (
         <Row>
             {organizations.map(org => (
-                <Col md={4} key={org.id}>
+                <Col md={4} key={org.id || org.slug}>
                     <Card className="mb-4 border-2" border="primary">
                         <Card.Body>
                             <Card.Title as="h4">{org.name}</Card.Title>
-                            <Card.Text>
+                            {/* Ganti Card.Text dengan div */}
+                            <div>
                                 <dl>
                                     <dd className="mb-0">Organization ID</dd>
                                     <dt className="mb-2">{org.organizationId}</dt>
                                 </dl>
-                            </Card.Text>
+                            </div>
                         </Card.Body>
                         <Card.Footer>
                             <Row>
                                 <Col lg={8} md={8}>
-                                    <Button as="a" variant="primary" href={`/organization/${org.slug}`} className="w-100">
-                                        Buka
+                                    <Button variant="primary" className="w-100" onClick={() => navigate(`/organization/${org.slug}`)}>
+                                        Open
                                     </Button>
                                 </Col>
                                 <Col lg={4} md={4}>
-                                    <Button variant="outline-secondary" className="w-100">
+                                    <Button variant="outline-secondary" className="w-100" onClick={() => onEdit && onEdit(org)}>
                                         Edit
                                     </Button>
                                 </Col>
