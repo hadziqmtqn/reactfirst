@@ -11,9 +11,9 @@ import {
 } from "react-bootstrap";
 import { useAppInfo } from "../context/AppInfoContext";
 import { useAuthMe } from "../context/AuthMeContext";
-import useLogout from "../../src/components/hooks/Logout";
+import useLogout from "../components/hooks/Logout";
 import ToastAlert
-    from "../components/ToastContainer";
+    from "../components/ToastAlert";
 
 function AppNavbar() {
     const { appName, appLogo } = useAppInfo();

@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
-import ToastAlert from "../../components/ToastContainer";
+import ToastAlert from "../../components/ToastAlert";
 
 export default function CustomerDetailPage() {
     const { organization, customerId } = useParams();

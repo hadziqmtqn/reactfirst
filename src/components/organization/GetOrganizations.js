@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 import axios from "../../api/axios";
 import ToastAlert
-    from "../ToastContainer";
+    from "../ToastAlert";
 
 const OrganizationList = () => {
     const [organizations, setOrganizations] = useState([]);
@@ -38,7 +38,7 @@ const OrganizationList = () => {
 
     if (error) {
         return <ToastAlert
-            variant="danger"
+            variant="error"
             message={error}
             show={true}
             onClose={() => setError(null)}

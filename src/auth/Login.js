@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Container, Card, Form, Button, Spinner, FormFloating } from "react-bootstrap";
 import axios from "axios";
 //import Swal from "sweetalert2";
-import { useNavigate, useLocation } from "react-router-dom"; // tambahkan useLocation
+import { useNavigate } from "react-router-dom"; // tambahkan useLocation
 import { useAppInfo } from "../context/AppInfoContext";
 import ToastAlert
-    from "../components/ToastContainer";
+    from "../components/ToastAlert";
 
 function Login() {
     const { appName, appLogo } = useAppInfo();
@@ -13,12 +13,13 @@ function Login() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
+    // Toast state
+    const [showToast, setShowToast] = useState(false);
+    const [toastMsg, setToastMsg] = useState("");
+    const [toastVariant, setToastVariant] = useState("success");
+
     const API_URL = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
-    //const location = useLocation(); // ambil location
-
-    // Ambil path asal dari location.state
-    //const from = location.state?.from?.pathname || "/";
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -53,15 +54,9 @@ function Login() {
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                /*await Swal.fire({
-                    icon: "error",
-                    title: "Login Gagal",
-                    text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
-                });*/
-                ToastAlert({
-                    variant: "error",
-                    message: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
-                });
+                setToastMsg(err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.");
+                setToastVariant("error");
+                setShowToast(true);
                 setErrors({});
             }
         }
@@ -138,6 +133,13 @@ function Login() {
                     </Form>
                 </Card.Body>
             </Card>
+
+            <ToastAlert
+                show={showToast}
+                onClose={() => setShowToast(false)}
+                message={toastMsg}
+                variant={toastVariant}
+            />
         </Container>
     );
 }

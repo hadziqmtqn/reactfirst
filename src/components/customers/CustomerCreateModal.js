@@ -7,7 +7,7 @@ import {
     Spinner
 } from "react-bootstrap";
 import axios from "../../api/axios";
-import ToastAlert from "../ToastContainer"; // Pastikan path import sudah benar
+import ToastAlert from "../ToastAlert"; // Pastikan path import sudah benar
 
 export default function CustomerCreateModal({ show, onClose, organizations = [], onCreated }) {
     const [formData, setFormData] = useState({
@@ -23,8 +23,8 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
     // Toast state
     const [toastShow, setToastShow] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
-    const [toastVariant, setToastVariant] = useState("primary");
-    const showToast = (message, variant = "primary") => {
+    const [toastVariant, setToastVariant] = useState("success");
+    const showToast = (message, variant = "success") => {
         setToastMessage(message);
         setToastVariant(variant);
         setToastShow(true);
@@ -62,7 +62,7 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
         e.preventDefault();
         if (!formData.organization_id) {
             setFormErrors({ organization_id: ["Organization harus dipilih!"] });
-            showToast("Organization harus dipilih!", "danger");
+            showToast("Organization harus dipilih!", "error");
             return;
         }
         setLoading(true);
@@ -104,10 +104,10 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
                 err.response.data.message
             ) {
                 setFormErrors(err.response.data.message || {});
-                showToast("Ada field yang salah, periksa kembali.", "danger");
+                showToast("Ada field yang salah, periksa kembali.", "error");
             } else {
                 setFormErrors({ general: "Terjadi kesalahan saat membuat customer." });
-                showToast("Terjadi kesalahan saat membuat customer.", "danger");
+                showToast("Terjadi kesalahan saat membuat customer.", "error");
             }
         }
         setLoading(false);
