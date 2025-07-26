@@ -102,8 +102,8 @@ function Page() {
         <Container style={{marginTop: '80px'}}>
             <Card className="mb-4">
                 <Card.Body className="text-center">
-                    <h1>Welcome to My App</h1>
-                    <p>This is the landing page. Use the menu to navigate.</p>
+                    <h1>Welcome to {appName}</h1>
+                    <p className="text-muted">Manage your organizations efficiently.</p>
                 </Card.Body>
             </Card>
 
@@ -113,6 +113,7 @@ function Page() {
                     <i className="bi bi-plus-circle me-2"></i>Add Organization
                 </Button>
             </div>
+
             <OrganizationList onEdit={handleEdit} refreshKey={refreshKey} />
 
             <OrganizationModal
