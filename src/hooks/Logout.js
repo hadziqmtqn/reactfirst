@@ -5,7 +5,7 @@ import Swal
     from "sweetalert2";
 import axios
     from "axios";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 
 export default function useLogout() {

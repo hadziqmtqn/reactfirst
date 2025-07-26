@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 
 import Swal from "sweetalert2";
-import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { usePageTitle } from "../../hooks/usePageTitle";
 import { useAppInfo } from "../../context/AppInfoContext";
 
 function ZohoConfigPage() {

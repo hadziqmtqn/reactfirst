@@ -2,21 +2,20 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from "./template/Navbar";
 import ProtectedRoute from "./auth/ProtectedRoute";
-import DashboardPage from "./pages/DashboardPage";
 import { AppInfoProvider } from "./context/AppInfoContext";
-import AppInfoUpdater from "./components/AppMetaUpdater";
-import ToastifyContainer
-    from "./components/ToastifyContainer";
-import NotFound from './pages/NotFound';
-
-import UserPage from "./dashboard/users/Page";
-import LoginPage from "./components/hooks/Login";
-import OrganizationPage from "./dashboard/organization/Page";
-import ZohoConfigPage from "./dashboard/zoho-config/Page";
-import CustomerTablePage from './dashboard/customers/Page';
-import CustomerDetailPage from "./dashboard/customers/DetailPage";
 import { AuthMeProvider } from "./context/AuthMeContext";
 import { AuthProvider } from "./context/AuthContext";
+import AppInfoUpdater from "./components/AppMetaUpdater";
+import ToastifyContainer from "./components/ToastifyContainer";
+import NotFound from './components/NotFound';
+
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import UserPage from "./pages/users/Page";
+import LoginPage from "./pages/auth/Login";
+import OrganizationPage from "./pages/organization/Page";
+import ZohoConfigPage from "./pages/zoho-config/Page";
+import CustomerTablePage from './pages/customers/Page';
+import CustomerDetailPage from "./pages/customers/DetailPage";
 
 function App() {
     return (

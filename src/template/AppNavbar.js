@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import { useAppInfo } from "../context/AppInfoContext";
 import { useAuthMe } from "../context/AuthMeContext";
-import useLogout from "../components/hooks/Logout";
+import useLogout from "../hooks/Logout";
 
 function AppNavbar() {
     const { appName, appLogo } = useAppInfo();
@@ -24,7 +24,7 @@ function AppNavbar() {
         <>
             <Navbar bg="dark" variant="dark" expand="md" fixed="top">
                 <Container>
-                    <Navbar.Brand as={NavLink} to="/">
+                    <Navbar.Brand as={NavLink} to="/dashboard">
                         {hasValidSrc(appLogo) && (
                             <img
                                 src={appLogo}

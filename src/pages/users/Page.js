@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 import UserTable from "../../components/users/UserTable";
 import UserModal from "../../components/users/Modal";
 import { useAppInfo } from "../../context/AppInfoContext";
-import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function Page() {
     const { appName } = useAppInfo();

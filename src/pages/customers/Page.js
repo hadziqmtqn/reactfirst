@@ -17,7 +17,7 @@ import {
 
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import { useAppInfo } from "../../context/AppInfoContext";
-import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { usePageTitle } from "../../hooks/usePageTitle";
 import CustomerCreateModal from '../../components/customers/CustomerCreateModal';
 
 function CustomerTablePage() {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, Form, Button, Spinner, FormFloating } from "react-bootstrap";
 import axios from "axios";
-//import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom"; // tambahkan useLocation
 import { useAppInfo } from "../../context/AppInfoContext";
 import { useAuth } from "../../context/AuthContext";

@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 
 import Avatar from "./Avatar";
-import useIsMobile from "../hooks/useIsMobile";
+import useIsMobile from "../../hooks/useIsMobile";
 
 const UserTable = ({ users, pagination, loading, onEdit, onDelete, onPageClick }) => {
     const isMobile = useIsMobile();

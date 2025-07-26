@@ -1,11 +1,12 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
-import { usePageTitle } from "../components/hooks/usePageTitle";
-import { useAppInfo } from "../context/AppInfoContext";
+//import { usePageTitle } from "../components/hooks/usePageTitle";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 
 import OrganizationList
-    from "../components/organization/GetOrganizations";
+    from "../../components/organization/GetOrganizations";
 import {
     Button
 } from "react-bootstrap";

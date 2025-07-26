@@ -13,7 +13,7 @@ import {
     Breadcrumb
 } from "react-bootstrap";
 import { useAppInfo } from "../../context/AppInfoContext";
-import { usePageTitle } from "../../components/hooks/usePageTitle";
+import { usePageTitle } from "../../hooks/usePageTitle";
 import ToastAlert from "../../components/ToastAlert";
 
 export default function CustomerDetailPage() {
