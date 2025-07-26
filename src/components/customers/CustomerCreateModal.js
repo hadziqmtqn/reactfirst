@@ -7,7 +7,7 @@ import {
     Spinner
 } from "react-bootstrap";
 import axios from "../../api/axios";
-import ToastContainer from "../ToastContainer"; // Pastikan path import sudah benar
+import ToastAlert from "../ToastContainer"; // Pastikan path import sudah benar
 
 export default function CustomerCreateModal({ show, onClose, organizations = [], onCreated }) {
     const [formData, setFormData] = useState({
@@ -115,7 +115,7 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
 
     return (
         <Modal show={show} onHide={onClose} backdrop="static">
-            <ToastContainer
+            <ToastAlert
                 show={toastShow}
                 onClose={() => setToastShow(false)}
                 message={toastMessage}

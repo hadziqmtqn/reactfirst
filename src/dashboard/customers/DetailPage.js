@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
-import ToastContainer from "../../components/ToastContainer"; // pastikan importnya sesuai
+import ToastAlert from "../../components/ToastContainer";
 
 export default function CustomerDetailPage() {
     const { organization, customerId } = useParams();
@@ -90,7 +90,10 @@ export default function CustomerDetailPage() {
     };
 
     useEffect(() => {
-        fetchCustomer(true); // page pertama kali load, tampilkan spinner
+        fetchCustomer(true)
+            .then(() => {
+                //
+            }); // page pertama kali load, tampilkan spinner
         // eslint-disable-next-line
     }, [organization, customerId]);
 
@@ -151,7 +154,7 @@ export default function CustomerDetailPage() {
     // Render Toast di luar spinner/loading branch
     return (
         <>
-            <ToastContainer
+            <ToastAlert
                 show={toastShow}
                 onClose={() => setToastShow(false)}
                 message={toastMessage}

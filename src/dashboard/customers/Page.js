@@ -11,13 +11,14 @@ import {
     Alert,
     Form,
     Button,
-    FormFloating
+    FormFloating,
+    Badge
 } from 'react-bootstrap';
 
 import OrganizationSelect from '../../components/organization/OrganizationSelect';
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../components/hooks/usePageTitle";
-import CustomerCreateModal from '../../components/customers/CustomerCreateModal'; // <-- Tambahkan ini
+import CustomerCreateModal from '../../components/customers/CustomerCreateModal';
 
 function CustomerTablePage() {
     const { appName } = useAppInfo();
@@ -140,7 +141,7 @@ function CustomerTablePage() {
                                 <th>Customer Name</th>
                                 <th>Contact Number</th>
                                 <th>Company Name</th>
-                                <th>Website</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -162,7 +163,16 @@ function CustomerTablePage() {
                                         <td>{c.customer_name}</td>
                                         <td>{c.contact_number}</td>
                                         <td>{c.company_name}</td>
-                                        <td>{c.website}</td>
+                                        <td>
+                                            <Badge bg={`${
+                                                c.status === 'active' ? 'success' :
+                                                c.status === 'inactive' ? 'danger' :
+                                                c.status === 'pending' ? 'warning text-dark' :
+                                                'light text-dark'
+                                            }`}>
+                                                <span className="text-uppercase">{c.status}</span>
+                                            </Badge>
+                                        </td>
                                         <td>
                                             <Button
                                                 as={Link}

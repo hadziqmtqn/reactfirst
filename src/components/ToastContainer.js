@@ -1,7 +1,7 @@
 import React from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 
-export default function ToastContainerSederhana({ show, onClose, message, variant = "success" }) {
+export default function ToastAlert({ show, onClose, message, variant = "success" }) {
     return (
         <ToastContainer position="top-center" className="p-3" style={{ zIndex: 1080 }}>
             <Toast show={show} onClose={onClose} delay={2500} autohide>
