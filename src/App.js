@@ -17,6 +17,7 @@ import CustomerTablePage from './pages/customers/Page';
 import CustomerDetailPage from "./pages/customers/DetailPage";
 import ConfigPage from "./pages/organization/components/ConfigPage";
 import CustomersPage from "./pages/organization/components/CustomersPage";
+import ItemsPage from "./pages/organization/components/ItemsPage";
 
 function App() {
     return (
@@ -59,15 +60,21 @@ function App() {
                                         </ProtectedRoute>
                                     }/>
 
-                                    <Route path="/zoho-config/:organization" element={
+                                    <Route path="/zoho-config/:organizationSlug" element={
                                         <ProtectedRoute>
                                             <ConfigPage />
                                         </ProtectedRoute>
                                     }/>
 
-                                    <Route path="/customers/:organization" element={
+                                    <Route path="/customers/:organizationSlug" element={
                                         <ProtectedRoute>
                                             <CustomersPage />
+                                        </ProtectedRoute>
+                                    }/>
+
+                                    <Route path="/items/:organizationSlug" element={
+                                        <ProtectedRoute>
+                                            <ItemsPage />
                                         </ProtectedRoute>
                                     }/>
 

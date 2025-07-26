@@ -8,7 +8,7 @@ import { organizationSidebarItems } from '../page-components/SidebarConfig';
 
 const ConfigPage = () => {
     const { appName } = useAppInfo();
-    usePageTitle(`Organization Settings | ${appName}`);
+    usePageTitle(`Items | ${appName}`);
 
     const { organizationSlug } = useParams();
     const sidebarItems = organizationSidebarItems(organizationSlug);
@@ -19,7 +19,7 @@ const ConfigPage = () => {
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>
                     Dashboard
                 </Breadcrumb.Item>
-                <Breadcrumb.Item active>Setting</Breadcrumb.Item>
+                <Breadcrumb.Item active>Items</Breadcrumb.Item>
             </Breadcrumb>
 
             <Row>
@@ -33,7 +33,7 @@ const ConfigPage = () => {
                     <Card className="shadow-sm">
                         <Card.Body>
                             <Card.Title as="h4" className="mb-4 fw-bold">
-                                Organization Settings
+                                Items
                             </Card.Title>
                             {/* Konten utama di sini */}
                         </Card.Body>
