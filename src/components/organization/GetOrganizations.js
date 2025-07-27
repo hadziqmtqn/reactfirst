@@ -65,7 +65,7 @@ const OrganizationList = ({ onEdit, refreshKey }) => {
                         <Card.Footer>
                             <Row>
                                 <Col lg={8} md={8}>
-                                    <Button variant="primary" className="w-100" onClick={() => navigate(`/zoho-config/${org.slug}`)}>
+                                    <Button variant="primary" className="w-100" onClick={() => navigate(`/items/${org.slug}`)}>
                                         Open
                                     </Button>
                                 </Col>

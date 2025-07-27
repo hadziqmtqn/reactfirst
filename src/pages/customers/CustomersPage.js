@@ -29,6 +29,13 @@ const TABLE_COLUMNS = [
     { key: "company_name", label: "Company Name", sortable: true },
     { key: "status", label: "Status", sortable: false }
 ];
+const FILTER_BY_OPTIONS = [
+    { value: "Status.All", label: "All" },
+    { value: "Status.Active", label: "Active" },
+    { value: "Status.Inactive", label: "Inactive" },
+    { value: "Status.Duplicate", label: "Duplicate" },
+    { value: "Status.Crm", label: "CRM"}
+];
 
 const CustomersPage = () => {
     const { appName } = useAppInfo();
@@ -39,6 +46,7 @@ const CustomersPage = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
 
     const [search, setSearch] = useState('');
+    const [filterBy, setFilterBy] = useState('Status.All');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [customerData, setCustomerData] = useState({
         organizationSlug: "",
@@ -81,6 +89,7 @@ const CustomersPage = () => {
             const res = await axios.get(`/customers/${organizationSlug}`, {
                 params: {
                     search: debouncedSearch,
+                    filter_by: filterBy,
                     page,
                     per_page: perPage,
                     sort_column: sortColumn,
@@ -142,7 +151,7 @@ const CustomersPage = () => {
     useEffect(() => {
         fetchCustomers();
         // eslint-disable-next-line
-    }, [debouncedSearch, organizationSlug, page, perPage, sortColumn, sortOrder]);
+    }, [debouncedSearch, filterBy, organizationSlug, page, perPage, sortColumn, sortOrder]);
 
     // Sort controls
     const handleSort = (columnKey, sortable) => {
@@ -190,8 +199,9 @@ const CustomersPage = () => {
                                     <i className="bi bi-plus-circle me-2"></i>Add New
                                 </Button>
                             </Card.Title>
+                            <hr/>
                             <Row className="mb-3">
-                                <Col md={6}>
+                                <Col md={4}>
                                     <Form className="mb-2">
                                         <Form.Control
                                             type="search"
@@ -202,7 +212,22 @@ const CustomersPage = () => {
                                         />
                                     </Form>
                                 </Col>
-                                <Col md={6}>
+                                <Col md={4}>
+                                    <Form.Group className="mb-2">
+                                        <Form.Select
+                                            value={filterBy}
+                                            onChange={e => setFilterBy(e.target.value)}
+                                            disabled={loading}
+                                        >
+                                            {FILTER_BY_OPTIONS.map(opt => (
+                                                <option key={opt.value} value={opt.value}>
+                                                    {opt.label}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={4}>
                                     <Form.Group className="d-flex align-items-center justify-content-end">
                                         <Form.Label column="" className="me-2 mb-0">Show :</Form.Label>
                                         <Form.Select
