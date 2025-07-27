@@ -21,7 +21,7 @@ import axios from "../../../api/axios";
 import Header from "../page-components/Header";
 import { toast } from "react-toastify";
 
-const PER_PAGE_OPTIONS = [2, 10, 20, 50, 100];
+const PER_PAGE_OPTIONS = [10, 20, 50, 100];
 const TABLE_COLUMNS = [
     { key: "customer_name", label: "Customer Name", sortable: true },
     { key: "contact_number", label: "Contact Number", sortable: false },
