@@ -11,8 +11,7 @@ import {
     Spinner,
     Badge,
     Button,
-    Table,
-    Pagination
+    Table
 } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import Sidebar from "../page-components/Sidebar";
@@ -20,6 +19,7 @@ import { organizationSidebarItems } from '../page-components/SidebarConfig';
 import axios from "../../../api/axios";
 import Header from "../page-components/Header";
 import { toast } from "react-toastify";
+import PaginationControls from "../../../components/PaginationControls";
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100];
 const TABLE_COLUMNS = [
@@ -142,14 +142,6 @@ const CustomersPage = () => {
         // eslint-disable-next-line
     }, [debouncedSearch, organizationSlug, page, perPage, sortColumn, sortOrder]);
 
-    // Pagination controls
-    const handlePrevPage = () => {
-        if (page > 1) setPage(page - 1);
-    };
-    const handleNextPage = () => {
-        if (customerData.meta.has_more_page) setPage(page + 1);
-    };
-
     // Sort controls
     const handleSort = (columnKey, sortable) => {
         if (!sortable) return;
@@ -187,7 +179,7 @@ const CustomersPage = () => {
                             </Card.Title>
                             <Row className="mb-3">
                                 <Col md={6}>
-                                    <Form>
+                                    <Form className="mb-2">
                                         <Form.Control
                                             type="search"
                                             placeholder="Cari customer..."
@@ -199,7 +191,7 @@ const CustomersPage = () => {
                                 </Col>
                                 <Col md={6}>
                                     <Form.Group className="d-flex align-items-center justify-content-end">
-                                        <Form.Label className="me-2 mb-0">Show per page:</Form.Label>
+                                        <Form.Label column="" className="me-2 mb-0">Show :</Form.Label>
                                         <Form.Select
                                             value={perPage}
                                             onChange={e => setPerPage(Number(e.target.value))}
@@ -286,11 +278,16 @@ const CustomersPage = () => {
                                     Page {customerData.meta.page}
                                     {totalPages > 1 ? ` of ${totalPages}` : ""}
                                 </span>
-                                <Pagination>
-                                    <Pagination.Prev onClick={handlePrevPage} disabled={page <= 1 || loading} />
-                                    <Pagination.Item active>{page}</Pagination.Item>
-                                    <Pagination.Next onClick={handleNextPage} disabled={!customerData.meta.has_more_page || loading} />
-                                </Pagination>
+                                <PaginationControls
+                                    page={page}
+                                    totalPages={totalPages}
+                                    onPrev={() => setPage(page - 1)}
+                                    onNext={() => setPage(page + 1)}
+                                    loading={loading}
+                                    hasPrev={page > 1}
+                                    hasNext={customerData.meta.has_more_page}
+                                    onPageChange={setPage}
+                                />
                             </div>
                         </Card.Body>
                     </Card>
