@@ -14,14 +14,31 @@ import {
 } from "react-bootstrap";
 import { useAppInfo } from "../../context/AppInfoContext";
 import { usePageTitle } from "../../hooks/usePageTitle";
-import ToastAlert from "../../components/ToastAlert";
+import { toast } from "react-toastify";
 
 export default function CustomerDetailPage() {
     const { organization, customerId } = useParams();
     const { appName } = useAppInfo();
     usePageTitle(`Customer Detail | ${appName}`);
 
-    const [customer, setCustomer] = useState(null); // untuk display kiri
+    // Perbaiki default value customer.customer jadi object, bukan array
+    const [customer, setCustomer] = useState({
+        organizationSlug: "",
+        organizationName: "",
+        organizationId: "",
+        customer: {
+            contact_name: "",
+            contact_id: "",
+            contact_number: "",
+            company_name: "",
+            email: "",
+            mobile: "",
+            website: "",
+            notes: ""
+        }
+    });
+
+    // untuk display kiri & form
     const [formCustomer, setFormCustomer] = useState({
         contact_name: "",
         contact_id: "",
@@ -32,22 +49,12 @@ export default function CustomerDetailPage() {
         website: "",
         notes: ""
     });
+
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const [formLoading, setFormLoading] = useState(false);
 
-    // Toast state
-    const [toastShow, setToastShow] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
-    const [toastVariant, setToastVariant] = useState("primary");
-
-    const showToast = (message, variant = "primary") => {
-        setToastMessage(message);
-        setToastVariant(variant);
-        setToastShow(true);
-    };
-
-    // Fetch customer data, with optional loading spinner
+    // Fetch customer data, dengan loading spinner
     const fetchCustomer = async (withLoading = true) => {
         if (withLoading) setLoading(true);
         setErrors({});
@@ -55,7 +62,7 @@ export default function CustomerDetailPage() {
             const res = await axios.get(`/customers/${organization}/${customerId}`);
             if (res.data?.data) {
                 setCustomer(res.data.data);
-                setFormCustomer(res.data.data); // sinkronkan form dengan data asli
+                setFormCustomer(res.data.data.customer); // sinkronkan form dengan data asli
             } else {
                 setCustomer(null);
                 setFormCustomer({
@@ -81,23 +88,17 @@ export default function CustomerDetailPage() {
                 website: "",
                 notes: ""
             });
-            showToast(
-                err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.",
-                "danger"
-            );
+            toast.error(err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.");
         }
         if (withLoading) setLoading(false);
     };
 
     useEffect(() => {
-        fetchCustomer(true)
-            .then(() => {
-                //
-            }); // page pertama kali load, tampilkan spinner
+        fetchCustomer(true);
         // eslint-disable-next-line
     }, [organization, customerId]);
 
-    // Handle input change & clear error for field
+    // Handle input change & clear error untuk field
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormCustomer({
@@ -105,7 +106,6 @@ export default function CustomerDetailPage() {
             [name]: value
         });
 
-        // Hapus error pada field yang diubah
         if (errors[name]) {
             setErrors({ ...errors, [name]: undefined });
         }
@@ -124,20 +124,18 @@ export default function CustomerDetailPage() {
                 notes: formCustomer.notes
             });
             if (res.data.success) {
-                showToast("Data customer berhasil diupdate.", "primary");
+                toast.success(res.data.message || "Customer updated successfully.");
                 setCustomer(res.data.data); // update data untuk display
-                setFormCustomer(res.data.data); // update data untuk form
-                // Ambil ulang tanpa spinner
-                await fetchCustomer(false);
+                setFormCustomer(res.data.data.customer); // <-- Fix: update form ke customer object!
+                await fetchCustomer(false); // refresh tanpa spinner
             } else {
-                showToast(typeof res.data.message === "string" ? res.data.message : "Terjadi kesalahan.", "danger");
+                toast.error(res.data.message || "Terjadi kesalahan.");
             }
         } catch (err) {
-            // Tangani error 422 dari backend
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                showToast(err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.", "danger");
+                toast.error(err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.");
             }
         }
         setFormLoading(false);
@@ -145,25 +143,18 @@ export default function CustomerDetailPage() {
 
     // Cancel: reset formCustomer ke customer
     const handleCancel = () => {
-        if (customer) {
-            setFormCustomer(customer);
+        if (customer && customer.customer) {
+            setFormCustomer(customer.customer); // <-- Fix: ambil object customer!
             setErrors({});
         }
     };
 
-    // Render Toast di luar spinner/loading branch
+    // Render
     return (
         <>
-            <ToastAlert
-                show={toastShow}
-                onClose={() => setToastShow(false)}
-                message={toastMessage}
-                variant={toastVariant}
-            />
             {loading ? (
                 <Container className="container" style={{ marginTop: '80px' }}>
                     <div className="text-center my-5">
-                        {/* Spinner hanya muncul pada first load */}
                         <span className="spinner-border text-primary" />
                     </div>
                 </Container>
@@ -173,44 +164,48 @@ export default function CustomerDetailPage() {
                 </Container>
             ) : (
                 <Container className="container" style={{ marginTop: '80px' }}>
-
                     <Breadcrumb>
-                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/customers" }}>Customers</Breadcrumb.Item>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>Dashboard</Breadcrumb.Item>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: `/customers/${customer.organizationSlug}` }}>Customers</Breadcrumb.Item>
                         <Breadcrumb.Item active>Detail</Breadcrumb.Item>
                     </Breadcrumb>
-
                     <Row>
                         <Col xl={4} lg={5} sm={12} className="mb-4">
                             <Card className="shadow-none">
                                 <Card.Body>
                                     <Card.Title className="mb-3 fw-bold text-center">
                                         <img
-                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(customer.contact_name)}&background=EBF4FF&color=7F9CF5&size=96`}
-                                            alt={customer.contact_name}
+                                            src={`https://ui-avatars.com/api/?name=${encodeURIComponent(customer.customer.contact_name)}&background=EBF4FF&color=7F9CF5&size=96`}
+                                            alt={customer.customer.contact_name}
                                             className="rounded-circle mb-3"
                                             width={96}
                                             height={96}
                                         />
                                         <Card.Title as="h5" className="mb-3 fw-bold">
-                                            {customer.contact_name}
+                                            {customer.customer.contact_name}
                                         </Card.Title>
                                     </Card.Title>
                                     <dl>
                                         <dd className="mb-0 small">Contact ID:</dd>
-                                        <dt className="mb-2">{customer.contact_id || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.contact_id || '-'}</dt>
                                         <dd className="mb-0 small">Contact Number:</dd>
-                                        <dt className="mb-2">{customer.contact_number || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.contact_number || '-'}</dt>
                                         <dd className="mb-0 small">Company Name:</dd>
-                                        <dt className="mb-2">{customer.company_name || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.company_name || '-'}</dt>
                                         <dd className="mb-0 small">Email:</dd>
-                                        <dt className="mb-2">{customer.email || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.email || '-'}</dt>
                                         <dd className="mb-0 small">Mobile:</dd>
-                                        <dt className="mb-2">{customer.mobile || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.mobile || '-'}</dt>
                                         <dd className="mb-0 small">Website:</dd>
-                                        <dt className="mb-2">{customer.website || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.website || '-'}</dt>
                                         <dd className="mb-0 small">Notes:</dd>
-                                        <dt className="mb-2">{customer.notes || '-'}</dt>
+                                        <dt className="mb-2">{customer.customer.notes || '-'}</dt>
+                                        <dd className="mb-0 small">Status:</dd>
+                                        <dt className="mb-2">
+                                            <span className={`badge ${customer.customer.status === 'active' ? 'bg-success' : 'bg-danger'}`}>
+                                                {customer.customer.status.charAt(0).toUpperCase() + customer.customer.status.slice(1)}
+                                            </span>
+                                        </dt>
                                     </dl>
                                 </Card.Body>
                             </Card>
