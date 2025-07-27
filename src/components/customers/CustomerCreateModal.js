@@ -7,11 +7,10 @@ import {
     Spinner
 } from "react-bootstrap";
 import axios from "../../api/axios";
-import ToastAlert from "../ToastAlert"; // Pastikan path import sudah benar
+import { toast } from "react-toastify";
 
-export default function CustomerCreateModal({ show, onClose, organizations = [], onCreated }) {
+export default function CustomerCreateModal({ show, onClose, organizationSlug, onCreated }) {
     const [formData, setFormData] = useState({
-        organization_id: "",
         contact_name: "",
         company_name: "",
         website: "",
@@ -20,21 +19,10 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
     const [formErrors, setFormErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
-    // Toast state
-    const [toastShow, setToastShow] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
-    const [toastVariant, setToastVariant] = useState("success");
-    const showToast = (message, variant = "success") => {
-        setToastMessage(message);
-        setToastVariant(variant);
-        setToastShow(true);
-    };
-
     // Reset data saat modal dibuka/dtutup
     useEffect(() => {
         if (!show) {
             setFormData({
-                organization_id: organizations[0]?.id?.toString() || "",
                 contact_name: "",
                 company_name: "",
                 website: "",
@@ -42,15 +30,9 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
             });
             setFormErrors({});
             setLoading(false);
-            setToastShow(false); // Reset toast
-        } else if (organizations.length > 0 && !formData.organization_id) {
-            setFormData(prev => ({
-                ...prev,
-                organization_id: organizations[0].id.toString()
-            }));
         }
         // eslint-disable-next-line
-    }, [show, organizations]);
+    }, [show]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -60,27 +42,20 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formData.organization_id) {
-            setFormErrors({ organization_id: ["Organization harus dipilih!"] });
-            showToast("Organization harus dipilih!", "error");
-            return;
-        }
         setLoading(true);
         setFormErrors({});
         try {
-            const res = await axios.post("/customers/store", {
-                organization_id: formData.organization_id,
+            const res = await axios.post(`/customers/${organizationSlug}/store`, {
                 contact_name: formData.contact_name,
                 company_name: formData.company_name,
                 website: formData.website,
                 notes: formData.notes
             });
             if (res.data.success) {
-                showToast("Customer berhasil ditambahkan!", "primary");
+                toast.success(res.data.message || "Customer has been created successfully.");
                 if (onCreated) onCreated(res.data.data);
                 setTimeout(() => {
                     setFormData({
-                        organization_id: organizations[0]?.id?.toString() || "",
                         contact_name: "",
                         company_name: "",
                         website: "",
@@ -90,12 +65,7 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
                 }, 800); // Tutup modal setelah toast
             } else {
                 setFormErrors(res.data.message || {});
-                showToast(
-                    typeof res.data.message === "string"
-                        ? res.data.message
-                        : "Gagal menambah customer.",
-                    "danger"
-                );
+                toast.error(res.data.message || "Failed to create customer.");
             }
         } catch (err) {
             if (
@@ -104,10 +74,10 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
                 err.response.data.message
             ) {
                 setFormErrors(err.response.data.message || {});
-                showToast("Ada field yang salah, periksa kembali.", "error");
+                toast.error("Please check the form fields.");
             } else {
                 setFormErrors({ general: "Terjadi kesalahan saat membuat customer." });
-                showToast("Terjadi kesalahan saat membuat customer.", "error");
+                toast.error("Terjadi kesalahan saat membuat customer.");
             }
         }
         setLoading(false);
@@ -115,37 +85,11 @@ export default function CustomerCreateModal({ show, onClose, organizations = [],
 
     return (
         <Modal show={show} onHide={onClose} backdrop="static">
-            <ToastAlert
-                show={toastShow}
-                onClose={() => setToastShow(false)}
-                message={toastMessage}
-                variant={toastVariant}
-            />
             <Modal.Header closeButton>
                 <Modal.Title>Tambah Customer</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit} noValidate>
-                    <FormFloating className="mb-3">
-                        <Form.Select
-                            name="organization_id"
-                            value={formData.organization_id}
-                            onChange={handleChange}
-                            isInvalid={!!formErrors.organization_id}
-                            required
-                        >
-                            {organizations.length === 0 && (
-                                <option value="">-- Pilih Organisasi --</option>
-                            )}
-                            {organizations.map(org => (
-                                <option key={org.id} value={org.id}>{org.name}</option>
-                            ))}
-                        </Form.Select>
-                        <Form.Label column="" htmlFor="organization_id">Organization</Form.Label>
-                        <Form.Control.Feedback type="invalid">
-                            {formErrors.organization_id && formErrors.organization_id[0]}
-                        </Form.Control.Feedback>
-                    </FormFloating>
                     <FormFloating className="mb-3">
                         <Form.Control
                             type="text"

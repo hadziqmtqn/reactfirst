@@ -20,6 +20,7 @@ import axios from "../../api/axios";
 import Header from "../components/Header";
 import { toast } from "react-toastify";
 import PaginationControls from "../../components/PaginationControls";
+import CustomerCreateModal from "../../components/customers/CustomerCreateModal";
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100];
 const TABLE_COLUMNS = [
@@ -35,6 +36,7 @@ const CustomersPage = () => {
 
     const { organizationSlug } = useParams();
     const sidebarItems = organizationSidebarItems(organizationSlug);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     const [search, setSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -153,6 +155,10 @@ const CustomersPage = () => {
         }
     };
 
+    const handleCreated = () => {
+        fetchCustomers(); // Refresh data setelah create
+    };
+
     // Calculate total pages if available (optional)
     const totalPages = customerData.meta.total && customerData.meta.per_page
         ? Math.ceil(customerData.meta.total / customerData.meta.per_page)
@@ -174,8 +180,15 @@ const CustomersPage = () => {
                     <Header name={customerData.organizationName} orgId={customerData.organizationId} />
                     <Card className="shadow-sm">
                         <Card.Body>
-                            <Card.Title as="h4" className="mb-4 fw-bold">
-                                Customers
+                            <Card.Title className="mb-4 d-flex align-items-center justify-content-between">
+                                <h4 className="fw-bold">Customers</h4>
+                                <Button
+                                    variant="secondary"
+                                    className="d-flex align-items-center"
+                                    onClick={() => setShowCreateModal(true)} // <-- Buka modal
+                                >
+                                    <i className="bi bi-plus-circle me-2"></i>Add New
+                                </Button>
                             </Card.Title>
                             <Row className="mb-3">
                                 <Col md={6}>
@@ -293,6 +306,13 @@ const CustomersPage = () => {
                     </Card>
                 </Col>
             </Row>
+            {/* MODAL CREATE CUSTOMER */}
+            <CustomerCreateModal
+                show={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                organizationSlug={customerData.organizationSlug}
+                onCreated={handleCreated}
+            />
         </Container>
     );
 };
