@@ -6,7 +6,7 @@ import { Link , useParams } from "react-router-dom";
 import Sidebar from "../page-components/Sidebar";
 import { organizationSidebarItems } from '../page-components/SidebarConfig';
 
-const ConfigPage = () => {
+const ItemsPage = () => {
     const { appName } = useAppInfo();
     usePageTitle(`Items | ${appName}`);
 
@@ -44,4 +44,4 @@ const ConfigPage = () => {
     );
 };
 
-export default ConfigPage;
+export default ItemsPage;
