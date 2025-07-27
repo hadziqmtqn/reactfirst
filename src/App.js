@@ -12,12 +12,11 @@ import NotFound from './components/NotFound';
 import Page from "./pages/dashboard/Page";
 import UserPage from "./pages/users/Page";
 import LoginPage from "./pages/auth/Login";
-import OrganizationPage from "./pages/organization/Page";
 import CustomerTablePage from './pages/customers/Page';
 import CustomerDetailPage from "./pages/customers/DetailPage";
-import ConfigPage from "./pages/organization/components/ConfigPage";
-import CustomersPage from "./pages/organization/components/CustomersPage";
-import ItemsPage from "./pages/organization/components/ItemsPage";
+import ConfigPage from "./pages/zoho-config/Page";
+import CustomersPage from "./pages/customers/CustomersPage";
+import ItemsPage from "./pages/items/ItemsPage";
 
 function App() {
     return (
@@ -51,12 +50,6 @@ function App() {
                                     <Route path="/customers/:organization/:customerId" element={
                                         <ProtectedRoute>
                                             <CustomerDetailPage />
-                                        </ProtectedRoute>
-                                    }/>
-
-                                    <Route path="/organization" element={
-                                        <ProtectedRoute>
-                                            <OrganizationPage />
                                         </ProtectedRoute>
                                     }/>
 

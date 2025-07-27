@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { usePageTitle } from "../../../hooks/usePageTitle";
-import { useAppInfo } from "../../../context/AppInfoContext";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 import {
     Breadcrumb,
     Card,
@@ -14,12 +14,12 @@ import {
     Table
 } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
-import Sidebar from "../page-components/Sidebar";
-import { organizationSidebarItems } from '../page-components/SidebarConfig';
-import axios from "../../../api/axios";
-import Header from "../page-components/Header";
+import Sidebar from "../components/Sidebar";
+import { organizationSidebarItems } from '../components/SidebarConfig';
+import axios from "../../api/axios";
+import Header from "../components/Header";
 import { toast } from "react-toastify";
-import PaginationControls from "../../../components/PaginationControls";
+import PaginationControls from "../../components/PaginationControls";
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100];
 const TABLE_COLUMNS = [

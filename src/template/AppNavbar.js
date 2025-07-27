@@ -4,8 +4,7 @@ import {
     Container,
     Navbar,
     Nav,
-    Dropdown,
-    NavDropdown
+    Dropdown
 } from "react-bootstrap";
 import { useAppInfo } from "../context/AppInfoContext";
 import { useAuthMe } from "../context/AuthMeContext";
@@ -41,11 +40,6 @@ function AppNavbar() {
                         <Nav className="me-auto">
                             <Nav.Link as={NavLink} to="/dashboard">Dashboard</Nav.Link>
                             <Nav.Link as={NavLink} to="/users">Users</Nav.Link>
-                            <Nav.Link as={NavLink} to="/customers">Customers</Nav.Link>
-                            <NavDropdown title="Settings" id="basic-nav-dropdown">
-                                <NavDropdown.Item as={NavLink} to="/organization">Organization</NavDropdown.Item>
-                                <NavDropdown.Item as={NavLink} to="/zoho-config">Zoho Config</NavDropdown.Item>
-                            </NavDropdown>
                         </Nav>
                         <Nav>
                             <Dropdown align="end">

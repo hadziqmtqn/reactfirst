@@ -1,10 +1,10 @@
 import React from 'react';
-import { usePageTitle } from "../../../hooks/usePageTitle";
-import { useAppInfo } from "../../../context/AppInfoContext";
+import { usePageTitle } from "../../hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 import { Breadcrumb, Card, Container, Row, Col } from "react-bootstrap";
 import { Link , useParams } from "react-router-dom";
-import Sidebar from "../page-components/Sidebar";
-import { organizationSidebarItems } from '../page-components/SidebarConfig';
+import Sidebar from "../components/Sidebar";
+import { organizationSidebarItems } from '../components/SidebarConfig';
 
 const ItemsPage = () => {
     const { appName } = useAppInfo();

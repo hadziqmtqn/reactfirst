@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../api/axios";
-
+import React, { useEffect, useState } from 'react';
+import { usePageTitle } from "../../hooks/usePageTitle";
+import { useAppInfo } from "../../context/AppInfoContext";
 import {
-    Container,
+    Breadcrumb,
     Card,
+    Container,
     Row,
     Col,
     Form,
+    FormFloating,
     Button,
-    Spinner,
-    Alert,
-    FormFloating
+    Spinner
 } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import { organizationSidebarItems } from '../components/SidebarConfig';
+import axios from "../../api/axios";
+import { toast } from "react-toastify";
+import Header from "../components/Header";
 
-import Swal from "sweetalert2";
-import { usePageTitle } from "../../hooks/usePageTitle";
-import { useAppInfo } from "../../context/AppInfoContext";
-
-function ZohoConfigPage() {
+const ConfigPage = () => {
     const { appName } = useAppInfo();
-    usePageTitle(`Zoho Configuration | ${appName}`);
+    usePageTitle(`Organization Settings | ${appName}`);
+
+    const { organizationSlug } = useParams();
+    const sidebarItems = organizationSidebarItems(organizationSlug);
 
     const [zohoConfig, setZohoConfig] = useState({
-        id: "",
+        organizationSlug: "",
         organizationName: "",
         organizationId: "",
         code: "",
@@ -31,18 +36,18 @@ function ZohoConfigPage() {
         redirectUrl: "",
         refreshToken: "",
     });
+
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(true);
     const [formLoading, setFormLoading] = useState(false);
 
-    // Fetch organization data
     const fetchZohoConfig = async () => {
         setLoading(true);
         try {
-            const res = await axiosInstance.get("/zoho-config");
+            const res = await axios.get(`/zoho-config/${organizationSlug}`);
             if (res.data.success && res.data.data) {
                 setZohoConfig({
-                    id: res.data.data.id,
+                    organizationSlug: res.data.data.organizationSlug, // pastikan field ini benar
                     organizationName: res.data.data.organizationName,
                     organizationId: res.data.data.organizationId,
                     code: res.data.data.code,
@@ -51,54 +56,40 @@ function ZohoConfigPage() {
                     redirectUrl: res.data.data.redirectUrl,
                     refreshToken: res.data.data.refreshToken
                 });
+            } else {
+                toast.error('Data konfigurasi Zoho tidak ditemukan.');
             }
         } catch (err) {
-            await Swal.fire({
-                icon: "error",
-                title: "Gagal mengambil data",
-                text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
-            });
+            toast.error('Gagal mengambil data konfigurasi Zoho. Silakan coba lagi.');
         }
         setLoading(false);
     };
 
     useEffect(() => {
         fetchZohoConfig();
-    }, []);
+        // eslint-disable-next-line
+    }, [organizationSlug]);
 
-    // Handle input change & clear error for field
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setZohoConfig({
-            ...zohoConfig,
+        setZohoConfig(prev => ({
+            ...prev,
             [name]: value
-        });
+        }));
 
         // Hapus error pada field yang diubah
-        if (name === "code" && errors.code) {
-            setErrors({ ...errors, code: undefined });
-        }
-        if (name === "clientId" && errors.client_id) {
-            setErrors({ ...errors, client_id: undefined });
-        }
-        if (name === "clientSecret" && errors.client_secret) {
-            setErrors({ ...errors, client_secret: undefined });
-        }
-        if (name === "redirectUrl" && errors.redirect_url) {
-            setErrors({ ...errors, redirect_url: undefined });
-        }
-        if (name === "refreshToken" && errors.refresh_token) {
-            setErrors({ ...errors, refresh_token: undefined });
-        }
+        setErrors(prev => ({
+            ...prev,
+            [name]: undefined
+        }));
     };
 
-    // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         setFormLoading(true);
         setErrors({});
         try {
-            const res = await axiosInstance.post(`zoho-config/${zohoConfig.id}/update`, {
+            const res = await axios.post(`/zoho-config/${organizationSlug}/update`, {
                 '_method': 'PUT',
                 code: zohoConfig.code,
                 client_id: zohoConfig.clientId,
@@ -107,32 +98,16 @@ function ZohoConfigPage() {
                 refresh_token: zohoConfig.refreshToken
             });
             if (res.data.success) {
-                await Swal.fire({
-                    icon: "success",
-                    title: "Berhasil",
-                    text: "Data berhasil diupdate.",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                toast.success(res.data.message || "Konfigurasi Zoho berhasil diperbarui.");
                 await fetchZohoConfig();
             } else {
-                // Jika error bukan validasi, tampilkan swal
-                await Swal.fire({
-                    icon: "error",
-                    title: "Gagal update",
-                    text: typeof res.data.message === "string" ? res.data.message : "Terjadi kesalahan."
-                });
+                toast.error(res.data.message || "Gagal memperbarui konfigurasi Zoho.");
             }
         } catch (err) {
-            // Tangani error 422 dari backend
             if (err.response && err.response.status === 422 && err.response.data.message) {
                 setErrors(err.response.data.message || {});
             } else {
-                await Swal.fire({
-                    icon: "error",
-                    title: "Gagal update",
-                    text: err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi."
-                });
+                toast.error("Terjadi kesalahan saat memperbarui konfigurasi Zoho. Silakan coba lagi.");
             }
         }
         setFormLoading(false);
@@ -140,131 +115,135 @@ function ZohoConfigPage() {
 
     return (
         <Container style={{ marginTop: "80px" }}>
-            <Card className="shadow-sm">
-                <Card.Body>
-                    <Card.Title as="h4" className="mb-4 fw-bold">Zoho Configuration</Card.Title>
-                    {loading ? (
-                        <div className="text-center my-5">
-                            <Spinner animation="border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
-                        </div>
-                    ) : (
-                        <Form onSubmit={handleSubmit} noValidate>
-                            <Alert variant="secondary">
-                                <strong>Organization Name:</strong> {zohoConfig.organizationName || "N/A"}<br />
-                                <strong>Organization ID:</strong> {zohoConfig.organizationId || "N/A"}
-                            </Alert>
-
-                            <Row className="mb-3">
-                                <Col md={12}>
-                                    <FormFloating className="mb-3">
-                                        <Form.Control
-                                            type="text"
-                                            name="code"
-                                            value={zohoConfig.code}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.code}
-                                            required
-                                            placeholder="Code"
-                                        />
-                                        <Form.Label htmlFor="code" column="">Code</Form.Label>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.code && errors.code[0]}
-                                        </Form.Control.Feedback>
-                                    </FormFloating>
-                                </Col>
-
-                                <Col xs={12} md={6}>
-                                    <FormFloating className="mb-3">
-                                        <Form.Control
-                                            type="text"
-                                            name="clientId"
-                                            value={zohoConfig.clientId}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.client_id}
-                                            required
-                                            placeholder="Client ID"
-                                        />
-                                        <Form.Label htmlFor="clientId" column="">Client ID</Form.Label>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.client_id && errors.client_id[0]}
-                                        </Form.Control.Feedback>
-                                    </FormFloating>
-                                </Col>
-
-                                <Col xs={12} md={6}>
-                                    <FormFloating className="mb-3">
-                                        <Form.Control
-                                            type="password"
-                                            name="clientSecret"
-                                            value={zohoConfig.clientSecret}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.client_secret}
-                                            required
-                                            placeholder="Client Secret"
-                                        />
-                                        <Form.Label htmlFor="clientSecret" column="">Client Secret</Form.Label>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.client_secret && errors.client_secret[0]}
-                                        </Form.Control.Feedback>
-                                    </FormFloating>
-                                </Col>
-
-                                <Col xs={12} md={6}>
-                                    <FormFloating className="mb-3">
-                                        <Form.Control
-                                            type="text"
-                                            name="redirectUrl"
-                                            value={zohoConfig.redirectUrl}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.redirect_url}
-                                            required
-                                            placeholder="Redirect URL"
-                                        />
-                                        <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.redirect_url && errors.redirect_url[0]}
-                                        </Form.Control.Feedback>
-                                    </FormFloating>
-                                </Col>
-
-                                <Col xs={12} md={6}>
-                                    <FormFloating className="mb-3">
-                                        <Form.Control
-                                            type="text"
-                                            name="refreshToken"
-                                            value={zohoConfig.refreshToken}
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.refresh_token}
-                                            placeholder="Refresh Token"
-                                        />
-                                        <Form.Label htmlFor="refreshToken" column="">Refresh Token</Form.Label>
-                                        <Form.Control.Feedback type="invalid">
-                                            {errors.refresh_token && errors.refresh_token[0]}
-                                        </Form.Control.Feedback>
-                                    </FormFloating>
-                                </Col>
-                            </Row>
-                            <Button variant="primary" type="submit" size={"lg"} disabled={formLoading}>
-                                {formLoading ? "Saving..." : "Submit"}
-                            </Button>
-
-                            <Button
-                                variant="outline-secondary"
-                                size={"lg"}
-                                className="ms-2"
-                                onClick={() => fetchZohoConfig()}
-                                disabled={formLoading}
-                            >
-                                Cancel
-                            </Button>
-                        </Form>
-                    )}
-                </Card.Body>
-            </Card>
+            <Breadcrumb>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>
+                    Dashboard
+                </Breadcrumb.Item>
+                <Breadcrumb.Item active>Setting</Breadcrumb.Item>
+            </Breadcrumb>
+            <Row>
+                <Col xs={12} md={3} className="mb-4">
+                    <Sidebar items={sidebarItems} />
+                </Col>
+                <Col xs={12} md={9}>
+                    <Header name={zohoConfig.organizationName} orgId={zohoConfig.organizationId} />
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <Card.Title as="h4" className="mb-4 fw-bold">
+                                Configuration
+                            </Card.Title>
+                            {loading ? (
+                                <div className="text-center my-4">
+                                    <Spinner animation="border" variant="primary" />
+                                </div>
+                            ) : (
+                                <Form onSubmit={handleSubmit} noValidate>
+                                    <Row className="mb-3">
+                                        <Col md={12}>
+                                            <FormFloating className="mb-3">
+                                                <Form.Control
+                                                    type="text"
+                                                    name="code"
+                                                    value={zohoConfig.code}
+                                                    onChange={handleChange}
+                                                    isInvalid={!!errors.code}
+                                                    required
+                                                    placeholder="Code"
+                                                />
+                                                <Form.Label column="" htmlFor="code">Code</Form.Label>
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.code && errors.code[0]}
+                                                </Form.Control.Feedback>
+                                            </FormFloating>
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                            <FormFloating className="mb-3">
+                                                <Form.Control
+                                                    type="text"
+                                                    name="clientId"
+                                                    value={zohoConfig.clientId}
+                                                    onChange={handleChange}
+                                                    isInvalid={!!errors.client_id}
+                                                    required
+                                                    placeholder="Client ID"
+                                                />
+                                                <Form.Label column="" htmlFor="clientId">Client ID</Form.Label>
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.client_id && errors.client_id[0]}
+                                                </Form.Control.Feedback>
+                                            </FormFloating>
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                            <FormFloating className="mb-3">
+                                                <Form.Control
+                                                    type="password"
+                                                    name="clientSecret"
+                                                    value={zohoConfig.clientSecret}
+                                                    onChange={handleChange}
+                                                    isInvalid={!!errors.client_secret}
+                                                    required
+                                                    placeholder="Client Secret"
+                                                />
+                                                <Form.Label column="" htmlFor="clientSecret">Client Secret</Form.Label>
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.client_secret && errors.client_secret[0]}
+                                                </Form.Control.Feedback>
+                                            </FormFloating>
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                            <FormFloating className="mb-3">
+                                                <Form.Control
+                                                    type="text"
+                                                    name="redirectUrl"
+                                                    value={zohoConfig.redirectUrl}
+                                                    onChange={handleChange}
+                                                    isInvalid={!!errors.redirect_url}
+                                                    required
+                                                    placeholder="Redirect URL"
+                                                />
+                                                <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.redirect_url && errors.redirect_url[0]}
+                                                </Form.Control.Feedback>
+                                            </FormFloating>
+                                        </Col>
+                                        <Col xs={12} md={6}>
+                                            <FormFloating className="mb-3">
+                                                <Form.Control
+                                                    type="text"
+                                                    name="refreshToken"
+                                                    value={zohoConfig.refreshToken}
+                                                    onChange={handleChange}
+                                                    isInvalid={!!errors.refresh_token}
+                                                    placeholder="Refresh Token"
+                                                />
+                                                <Form.Label column="" htmlFor="refreshToken">Refresh Token</Form.Label>
+                                                <Form.Control.Feedback type="invalid">
+                                                    {errors.refresh_token && errors.refresh_token[0]}
+                                                </Form.Control.Feedback>
+                                            </FormFloating>
+                                        </Col>
+                                    </Row>
+                                    <Button variant="primary" type="submit" size="lg" disabled={formLoading}>
+                                        {formLoading ? "Saving..." : "Submit"}
+                                    </Button>
+                                    <Button
+                                        variant="outline-secondary"
+                                        size="lg"
+                                        className="ms-2"
+                                        onClick={fetchZohoConfig}
+                                        disabled={formLoading}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Form>
+                            )}
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </Container>
     );
-}
+};
 
-export default ZohoConfigPage;
+export default ConfigPage;
