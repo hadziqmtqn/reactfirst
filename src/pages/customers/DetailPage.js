@@ -54,6 +54,18 @@ export default function CustomerDetailPage() {
     const [loading, setLoading] = useState(true);
     const [formLoading, setFormLoading] = useState(false);
 
+    // Default form customer, untuk reset form
+    const emptyCustomerForm = {
+        contact_name: "",
+        contact_id: "",
+        contact_number: "",
+        company_name: "",
+        email: "",
+        mobile: "",
+        website: "",
+        notes: ""
+    };
+
     // Fetch customer data, dengan loading spinner
     const fetchCustomer = async (withLoading = true) => {
         if (withLoading) setLoading(true);
@@ -65,29 +77,11 @@ export default function CustomerDetailPage() {
                 setFormCustomer(res.data.data.customer); // sinkronkan form dengan data asli
             } else {
                 setCustomer(null);
-                setFormCustomer({
-                    contact_name: "",
-                    contact_id: "",
-                    contact_number: "",
-                    company_name: "",
-                    email: "",
-                    mobile: "",
-                    website: "",
-                    notes: ""
-                });
+                setFormCustomer(emptyCustomerForm); // reset form jika tidak ada data
             }
         } catch (err) {
             setCustomer(null);
-            setFormCustomer({
-                contact_name: "",
-                contact_id: "",
-                contact_number: "",
-                company_name: "",
-                email: "",
-                mobile: "",
-                website: "",
-                notes: ""
-            });
+            setFormCustomer(emptyCustomerForm); // reset form jika error
             toast.error(err.response?.data?.message || "Terjadi kesalahan, silakan coba lagi.");
         }
         if (withLoading) setLoading(false);

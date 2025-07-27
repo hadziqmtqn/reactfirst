@@ -12,7 +12,6 @@ import NotFound from './components/NotFound';
 import Page from "./pages/dashboard/Page";
 import UserPage from "./pages/users/Page";
 import LoginPage from "./pages/auth/Login";
-import CustomerTablePage from './pages/customers/Page';
 import CustomerDetailPage from "./pages/customers/DetailPage";
 import ConfigPage from "./pages/zoho-config/Page";
 import CustomersPage from "./pages/customers/CustomersPage";
@@ -38,12 +37,6 @@ function App() {
                                     <Route path="/users" element={
                                         <ProtectedRoute>
                                             <UserPage />
-                                        </ProtectedRoute>
-                                    }/>
-
-                                    <Route path="/customers" element={
-                                        <ProtectedRoute>
-                                            <CustomerTablePage />
                                         </ProtectedRoute>
                                     }/>
 
