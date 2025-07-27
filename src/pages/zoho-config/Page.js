@@ -33,7 +33,7 @@ const ConfigPage = () => {
         code: "",
         clientId: "",
         clientSecret: "",
-        redirectUrl: "",
+        redirectUri: "",
         refreshToken: "",
     });
 
@@ -53,7 +53,7 @@ const ConfigPage = () => {
                     code: res.data.data.code,
                     clientId: res.data.data.clientId,
                     clientSecret: res.data.data.clientSecret,
-                    redirectUrl: res.data.data.redirectUrl,
+                    redirectUri: res.data.data.redirectUri,
                     refreshToken: res.data.data.refreshToken
                 });
             } else {
@@ -94,7 +94,7 @@ const ConfigPage = () => {
                 code: zohoConfig.code,
                 client_id: zohoConfig.clientId,
                 client_secret: zohoConfig.clientSecret,
-                redirect_url: zohoConfig.redirectUrl,
+                redirect_uri: zohoConfig.redirectUri,
                 refresh_token: zohoConfig.refreshToken
             });
             if (res.data.success) {
@@ -194,14 +194,14 @@ const ConfigPage = () => {
                                             <FormFloating className="mb-3">
                                                 <Form.Control
                                                     type="text"
-                                                    name="redirectUrl"
-                                                    value={zohoConfig.redirectUrl}
+                                                    name="redirectUri"
+                                                    value={zohoConfig.redirectUri}
                                                     onChange={handleChange}
                                                     isInvalid={!!errors.redirect_url}
                                                     required
                                                     placeholder="Redirect URL"
                                                 />
-                                                <Form.Label column="" htmlFor="redirectUrl">Redirect URI</Form.Label>
+                                                <Form.Label column="" htmlFor="redirectUri">Redirect URI</Form.Label>
                                                 <Form.Control.Feedback type="invalid">
                                                     {errors.redirect_url && errors.redirect_url[0]}
                                                 </Form.Control.Feedback>
