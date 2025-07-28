@@ -116,9 +116,7 @@ const ConfigPage = () => {
     return (
         <Container style={{ marginTop: "80px" }}>
             <Breadcrumb>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>
-                    Dashboard
-                </Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>Dashboard</Breadcrumb.Item>
                 <Breadcrumb.Item active>Setting</Breadcrumb.Item>
             </Breadcrumb>
             <Row>

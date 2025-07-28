@@ -45,6 +45,7 @@ const CustomersPage = () => {
     const sidebarItems = organizationSidebarItems(organizationSlug);
     const [showCreateModal, setShowCreateModal] = useState(false);
 
+    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [filterBy, setFilterBy] = useState('Status.All');
     const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -62,13 +63,28 @@ const CustomersPage = () => {
             sort_order: "A"
         }
     });
-    const [loading, setLoading] = useState(false);
 
     // Pagination & sort states
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
     const [sortColumn, setSortColumn] = useState("customer_name");
     const [sortOrder, setSortOrder] = useState("A"); // "A" = Ascending, "D" = Descending
+
+    // Default empty state for customer data
+    const emptyCustomerData = {
+        organizationSlug: organizationSlug,
+        organizationName: '',
+        organizationId: '',
+        customers: [],
+        meta: {
+            page: page,
+            per_page: perPage,
+            has_more_page: false,
+            total: 0,
+            sort_column: sortColumn,
+            sort_order: sortOrder
+        }
+    }
 
     // Debounce input search
     useEffect(() => {
@@ -113,37 +129,11 @@ const CustomersPage = () => {
                 });
             } else {
                 toast.error('Gagal mengambil data customer. Silakan coba lagi.');
-                setCustomerData({
-                    organizationSlug: organizationSlug,
-                    organizationName: '',
-                    organizationId: '',
-                    customers: [],
-                    meta: {
-                        page: page,
-                        per_page: perPage,
-                        has_more_page: false,
-                        total: 0,
-                        sort_column: sortColumn,
-                        sort_order: sortOrder
-                    }
-                });
+                setCustomerData(emptyCustomerData);
             }
         } catch (err) {
             toast.error('Gagal mengambil data customer. Silakan coba lagi.');
-            setCustomerData({
-                organizationSlug: organizationSlug,
-                organizationName: '',
-                organizationId: '',
-                customers: [],
-                meta: {
-                    page: page,
-                    per_page: perPage,
-                    has_more_page: false,
-                    total: 0,
-                    sort_column: sortColumn,
-                    sort_order: sortOrder
-                }
-            });
+            setCustomerData(emptyCustomerData);
         }
         setLoading(false);
     };
@@ -176,9 +166,7 @@ const CustomersPage = () => {
     return (
         <Container style={{ marginTop: "80px" }}>
             <Breadcrumb>
-                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>
-                    Dashboard
-                </Breadcrumb.Item>
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/dashboard" }}>Dashboard</Breadcrumb.Item>
                 <Breadcrumb.Item active>Customers</Breadcrumb.Item>
             </Breadcrumb>
             <Row>
@@ -295,13 +283,13 @@ const CustomersPage = () => {
                                                     </Badge>
                                                 </td>
                                                 <td>
-                                                    <Button
-                                                        as={Link}
+                                                    <Link
                                                         to={`/customers/${organizationSlug}/${c.contact_id}`}
-                                                        variant="primary"
+                                                        className="btn btn-primary"
+                                                        title="Detail Customer"
                                                     >
-                                                        <i className="bi bi-eye"></i> Detail
-                                                    </Button>
+                                                        <i className="bi bi-eye me-2"></i>Detail
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         ))
